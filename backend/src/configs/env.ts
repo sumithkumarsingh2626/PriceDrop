@@ -67,7 +67,7 @@ export const env: Env = (() => {
   }
 
   const data = parsed.data;
-  const redisEnabled = data.REDIS_ENABLED ?? data.NODE_ENV === 'production';
+  const redisEnabled = data.REDIS_ENABLED ?? false;
   const providedSecret = data.JWT_SECRET ?? '';
 
   if (data.NODE_ENV === 'production' && providedSecret.length < 32) {

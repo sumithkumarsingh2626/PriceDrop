@@ -1,0 +1,11 @@
+:root {
+  --brand-violet: #7c3aed;
+  --brand-purple: #8b5cf6;
+  --brand-cyan: #06b6d4;
+  --brand-ink: #0f172a;
+  --brand-slate: #111827;
+  --glass-bg: rgba(15, 23, 42, 0.72);
+  --glass-border: rgba(148, 163, 184, 0.12);
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+}
