@@ -13,6 +13,7 @@ import {
 } from '../services/token.service';
 import { asyncHandler } from '../utils/async-handler.util';
 import { sendSuccess } from '../utils/api-response.util';
+import { logger } from '../utils/logger';
 import {
   AppError,
   BadRequestError,
@@ -128,7 +129,22 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   user.resetPasswordOtpExpiresAt = undefined;
 
   await user.save();
-  await sendOtpEmail(email, otp, 'verification');
+
+  try {
+    await sendOtpEmail(email, otp, 'verification');
+  } catch (mailError) {
+    const message = mailError instanceof Error ? mailError.message : String(mailError);
+    logger.error(`Registration OTP email failed for ${email}: ${message}`);
+
+    if (env.NODE_ENV === 'production') {
+      throw new AppError(
+        'Account created but verification email could not be sent. Try resend OTP or contact support.',
+        HttpStatus.SERVICE_UNAVAILABLE,
+      );
+    }
+
+    logger.warn(`[DEV] Registration OTP for ${email}: ${otp}`);
+  }
 
   sendSuccess(
     res,

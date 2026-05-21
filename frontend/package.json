@@ -3,10 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "node ./deprecated-next-warning.cjs",
+    "build": "node ./deprecated-next-warning.cjs",
+    "start": "node ./deprecated-next-warning.cjs",
+    "lint": "node ./deprecated-next-warning.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

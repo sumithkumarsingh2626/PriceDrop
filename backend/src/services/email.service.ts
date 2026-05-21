@@ -52,13 +52,19 @@ async function sendMail(to: string, subject: string, text: string, html: string)
     return;
   }
 
-  await transport.sendMail({
-    from: env.EMAIL_FROM ?? env.EMAIL_USER,
-    to,
-    subject,
-    text,
-    html,
-  });
+  try {
+    await transport.sendMail({
+      from: env.EMAIL_FROM ?? env.EMAIL_USER,
+      to,
+      subject,
+      text,
+      html,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to send email to ${to}: ${message}`);
+    throw error;
+  }
 }
 
 export async function sendOtpEmail(
@@ -74,10 +80,11 @@ export async function sendOtpEmail(
       ? 'Use this OTP to complete your registration.'
       : 'Use this OTP to reset your password securely.';
 
-  await sendMail(
-    to,
-    subject,
-    `${title}\nYour OTP is ${otp}. ${actionLine}`,
+  try {
+    await sendMail(
+      to,
+      subject,
+      `${title}\nYour OTP is ${otp}. ${actionLine}`,
     `
       <div style="font-family:Arial,sans-serif;background:#07120f;padding:32px;color:#e5fff4">
         <div style="max-width:560px;margin:0 auto;background:#0d1f19;border:1px solid #1f5c47;border-radius:20px;padding:32px">
@@ -91,7 +98,14 @@ export async function sendOtpEmail(
         </div>
       </div>
     `,
-  );
+    );
+  } catch (error) {
+    if (env.NODE_ENV === 'production') {
+      throw error;
+    }
+
+    logger.warn(`[DEV] OTP for ${to} (${purpose}): ${otp}`);
+  }
 }
 
 export async function sendPriceDropEmail(input: PriceDropEmailInput): Promise<void> {

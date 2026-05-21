@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import api from '@/services/api.js';
 import { mapApiUser } from '@/lib/map-user';
 import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/context/ToastProvider';
 
 const PUBLIC_PREFIXES = ['/login', '/register', '/forgot-password', '/verify-otp'];
-const API_BASE = import.meta.env.VITE_API_URL ?? '/api';
 
 function isPublicPath(pathname) {
   if (pathname === '/') return true;
@@ -17,15 +15,24 @@ function isPublicPath(pathname) {
   );
 }
 
+async function refreshAccessToken(refreshToken) {
+  const res = await api.post('/auth/refresh-token', { refreshToken });
+  const access = res.data?.data?.accessToken ?? null;
+  const nextRefresh = res.data?.data?.refreshToken ?? refreshToken;
+  if (!access) throw new Error('Refresh failed');
+  return { access, refresh: nextRefresh };
+}
+
 export default function AuthProvider({ children }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { error: showError } = useToast();
-  const hydrateFromStorage = useAuthStore((state) => state.hydrateFromStorage);
-  const logoutClient = useAuthStore((state) => state.logoutClient);
-  const setAuthSession = useAuthStore((state) => state.setAuthSession);
-  const setTokens = useAuthStore((state) => state.setTokens);
-  const [sessionReady, setSessionReady] = useState(false);
+  const hydrateFromStorage = useAuthStore((s) => s.hydrateFromStorage);
+  const completeBootstrap = useAuthStore((s) => s.completeBootstrap);
+  const logoutClient = useAuthStore((s) => s.logoutClient);
+  const setAuthSession = useAuthStore((s) => s.setAuthSession);
+  const setTokens = useAuthStore((s) => s.setTokens);
+  const isBootstrapped = useAuthStore((s) => s.isBootstrapped);
 
   useEffect(() => {
     hydrateFromStorage();
@@ -33,70 +40,39 @@ export default function AuthProvider({ children }) {
 
     const bootstrap = async () => {
       const state = useAuthStore.getState();
-      const refreshToken = state.refreshToken;
+      const { refreshToken, accessToken } = state;
 
-      if (!state.accessToken && !refreshToken) {
+      if (!accessToken && !refreshToken) {
         logoutClient();
-        if (!cancelled) setSessionReady(true);
+        if (!cancelled) completeBootstrap();
         return;
       }
 
-      const loadMe = async () => {
-        const response = await api.get('/auth/me');
-        const mapped = mapApiUser(response.data?.data?.user ?? null);
-        if (!mapped) throw new Error('Invalid session payload');
-        return mapped;
-      };
-
-      const refreshSession = async () => {
-        const res = await axios.post(
-          `${API_BASE}/auth/refresh-token`,
-          { refreshToken },
-          { withCredentials: true, headers: { 'Content-Type': 'application/json' } },
-        );
-        const nextAccess = res.data?.data?.accessToken ?? null;
-        const nextRefresh = res.data?.data?.refreshToken ?? refreshToken;
-        if (!nextAccess) throw new Error('Refresh failed');
-        setTokens(nextAccess, nextRefresh);
-        return loadMe();
-      };
-
       try {
-        if (!useAuthStore.getState().accessToken && refreshToken) {
-          const user = await refreshSession();
-          if (!cancelled) {
-            setAuthSession(user, useAuthStore.getState().accessToken, useAuthStore.getState().refreshToken);
-          }
-        } else {
-          const user = await loadMe();
-          if (!cancelled) {
-            const access = useAuthStore.getState().accessToken;
-            const refresh = useAuthStore.getState().refreshToken;
-            if (access) setAuthSession(user, access, refresh);
-          }
+        let access = accessToken;
+        let refresh = refreshToken;
+
+        if (!access && refresh) {
+          const refreshed = await refreshAccessToken(refresh);
+          access = refreshed.access;
+          refresh = refreshed.refresh;
+          setTokens(access, refresh);
+        }
+
+        const meRes = await api.get('/auth/me');
+        const user = mapApiUser(meRes.data?.data?.user ?? null);
+        if (!user) throw new Error('Invalid session');
+
+        if (!cancelled && access) {
+          setAuthSession(user, access, refresh);
         }
       } catch {
-        try {
-          if (refreshToken) {
-            const user = await refreshSession();
-            if (!cancelled) {
-              setAuthSession(
-                user,
-                useAuthStore.getState().accessToken,
-                useAuthStore.getState().refreshToken,
-              );
-            }
-          } else {
-            logoutClient();
-          }
-        } catch {
-          logoutClient();
-          if (!isPublicPath(pathname)) {
-            showError('Your session expired. Please sign in again.');
-          }
+        logoutClient();
+        if (!cancelled && !isPublicPath(window.location.pathname)) {
+          showError('Session expired. Please sign in again.');
         }
       } finally {
-        if (!cancelled) setSessionReady(true);
+        if (!cancelled) completeBootstrap();
       }
     };
 
@@ -104,27 +80,24 @@ export default function AuthProvider({ children }) {
     return () => {
       cancelled = true;
     };
-  }, [hydrateFromStorage, logoutClient, pathname, setAuthSession, setTokens, showError]);
+  }, [hydrateFromStorage, completeBootstrap, logoutClient, setAuthSession, setTokens, showError]);
 
   useEffect(() => {
-    if (!sessionReady) return;
-    const state = useAuthStore.getState();
-    const authed = Boolean(state.accessToken && state.user);
-    const publicPath = isPublicPath(pathname);
+    if (!isBootstrapped) return;
+    const { accessToken, user } = useAuthStore.getState();
+    const authed = Boolean(accessToken && user);
+    const pub = isPublicPath(pathname);
 
-    if (!authed && !publicPath) navigate('/login', { replace: true });
+    if (!authed && !pub) navigate('/login', { replace: true });
     if (authed && ['/login', '/register', '/forgot-password'].includes(pathname)) {
       navigate('/dashboard', { replace: true });
     }
-  }, [pathname, navigate, sessionReady]);
+  }, [pathname, navigate, isBootstrapped]);
 
-  if (!sessionReady && !isPublicPath(pathname)) {
+  if (!isBootstrapped && !isPublicPath(pathname)) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-brand-ink text-slate-200">
-        <div className="glass-card flex items-center gap-3 px-5 py-4">
-          <Loader2 className="h-5 w-5 animate-spin text-brand-purple" />
-          <span className="text-sm font-medium">Restoring your session…</span>
-        </div>
+      <div className="flex min-h-screen items-center justify-center bg-brand-ink">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-purple" />
       </div>
     );
   }

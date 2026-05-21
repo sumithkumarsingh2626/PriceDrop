@@ -86,6 +86,19 @@ const STORE_DEFINITIONS: StoreDefinition[] = [
     availabilitySelectors: ['.fulfillment-add-to-cart-button button', '.shippingAvailability_2X3xt'],
   },
   {
+    hostPatterns: ['flipkart.'],
+    storeName: SupportedStores.FLIPKART,
+    titleSelectors: ['span.BNN0K', 'h1 span', 'meta[property="og:title"]', 'title'],
+    priceSelectors: [
+      'div.Nx9bqj.CxhGGd',
+      'div._30jeq3',
+      'div[class*="price"]',
+      'meta[property="product:price:amount"]',
+    ],
+    imageSelectors: ['img[src*="rukminim"]', 'meta[property="og:image"]'],
+    availabilitySelectors: ['#add-to-cart-button', '#buyNow'],
+  },
+  {
     hostPatterns: ['zara.'],
     storeName: SupportedStores.ZARA,
     titleSelectors: ['h1', 'meta[property="og:title"]'],
@@ -102,7 +115,9 @@ function findStoreDefinition(url: string): StoreDefinition {
   );
 
   if (!definition) {
-    throw new BadRequestError('Only Amazon, BestBuy, and Zara product URLs are supported right now.');
+    throw new BadRequestError(
+      'Supported stores: Amazon, Flipkart, BestBuy, and Zara. Paste a direct product page URL.',
+    );
   }
 
   return definition;
@@ -144,6 +159,10 @@ function parsePrice(raw?: string): number | undefined {
 
   const value = Number(normalized[0]);
   return Number.isFinite(value) ? value : undefined;
+}
+
+function round(value: number): number {
+  return Number(value.toFixed(2));
 }
 
 function parseAvailability(raw?: string): AvailabilityState {
@@ -411,10 +430,44 @@ function extractFromHtml(html: string, definition: StoreDefinition): ScrapedProd
   };
 }
 
-export async function scrapeProduct(url: string): Promise<ScrapedProductData> {
-  const definition = findStoreDefinition(url);
+function buildFallbackScrape(url: string, definition: StoreDefinition): ScrapedProductData {
+  let host = 'store';
+  try {
+    host = new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    /* ignore */
+  }
 
-  if (env.PRICES_API_KEY) {
+  const seed = Array.from(url).reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const currentPrice = round(500 + (seed % 4500) / 10);
+
+  return {
+    title: `Tracked product (${definition.storeName})`,
+    currentPrice,
+    currency: host.includes('.in') ? 'INR' : 'USD',
+    productImage: undefined,
+    availability: AvailabilityStates.UNKNOWN,
+    storeName: definition.storeName,
+  };
+}
+
+export async function scrapeProduct(url: string): Promise<ScrapedProductData> {
+  let definition: StoreDefinition;
+
+  try {
+    definition = findStoreDefinition(url);
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      throw error;
+    }
+    throw new BadRequestError('Enter a valid product URL from a supported store.');
+  }
+
+  const usePricesApi =
+    Boolean(env.PRICES_API_KEY) &&
+    (env.NODE_ENV === 'production' || process.env.SCRAPE_USE_PRICES_API === 'true');
+
+  if (usePricesApi) {
     try {
       return await scrapeViaPricesApiByQuery(url);
     } catch (error) {
@@ -431,11 +484,26 @@ export async function scrapeProduct(url: string): Promise<ScrapedProductData> {
     logger.warn(`Primary scrape failed for ${url}: ${error instanceof Error ? error.message : String(error)}`);
   }
 
-  try {
-    const html = await fetchHtmlWithBrowser(url);
-    return extractFromHtml(html, definition);
-  } catch (error) {
-    logger.error(`Browser scrape failed for ${url}: ${error instanceof Error ? error.message : String(error)}`);
-    throw new BadRequestError('Unable to scrape that product right now. Please try again later.');
+  const useBrowser =
+    env.NODE_ENV === 'production' || process.env.SCRAPE_USE_BROWSER === 'true';
+
+  if (useBrowser) {
+    try {
+      const html = await fetchHtmlWithBrowser(url);
+      return extractFromHtml(html, definition);
+    } catch (error) {
+      logger.warn(
+        `Browser scrape failed for ${url}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
+
+  if (env.NODE_ENV !== 'production') {
+    logger.warn(`Using development fallback scrape for ${url}`);
+    return buildFallbackScrape(url, definition);
+  }
+
+  throw new BadRequestError(
+    'Could not read price from that page. Try again later or use Amazon / Flipkart / BestBuy / Zara.',
+  );
 }

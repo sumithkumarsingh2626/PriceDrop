@@ -86,6 +86,13 @@ export async function trackProductForUser(userId: string, input: TrackProductInp
     throw new NotFoundError('User not found');
   }
 
+  const prefs = user.notificationPreferences ?? {
+    email: true,
+    whatsapp: false,
+    sms: false,
+    push: false,
+  };
+
   const scraped = await scrapeProduct(input.url);
 
   const product = await Product.create({
@@ -105,10 +112,10 @@ export async function trackProductForUser(userId: string, input: TrackProductInp
     trackingStatus: TrackingStatuses.ACTIVE,
     notificationEnabled: input.notificationEnabled ?? true,
     notificationSettings: {
-      email: input.notificationSettings?.email ?? user.notificationPreferences.email,
-      whatsapp: input.notificationSettings?.whatsapp ?? user.notificationPreferences.whatsapp,
-      sms: input.notificationSettings?.sms ?? user.notificationPreferences.sms,
-      push: input.notificationSettings?.push ?? user.notificationPreferences.push,
+      email: input.notificationSettings?.email ?? prefs.email,
+      whatsapp: input.notificationSettings?.whatsapp ?? prefs.whatsapp,
+      sms: input.notificationSettings?.sms ?? prefs.sms,
+      push: input.notificationSettings?.push ?? prefs.push,
       anyPriceDrop: input.notificationSettings?.anyPriceDrop ?? true,
       targetPriceAlert: input.notificationSettings?.targetPriceAlert ?? true,
     },

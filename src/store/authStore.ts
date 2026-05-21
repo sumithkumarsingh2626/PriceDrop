@@ -15,6 +15,7 @@ interface AuthState extends AuthTokens {
   isAuthenticated: boolean;
   isBootstrapped: boolean;
   hydrateFromStorage: () => void;
+  completeBootstrap: () => void;
   setUser: (user: User | null) => void;
   /** Called after login / refresh succeed */
   setTokens: (access: string | null, refresh?: string | null) => void;
@@ -60,9 +61,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       accessToken: access,
       refreshToken: refresh,
       isAuthenticated: Boolean(access && get().user),
-      isBootstrapped: true,
+      isBootstrapped: false,
     });
   },
+
+  completeBootstrap: () => set({ isBootstrapped: true }),
 
   setUser: (user) =>
     set({

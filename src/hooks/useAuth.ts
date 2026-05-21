@@ -53,7 +53,9 @@ export function useAuth() {
       return getEnvelopeData<{ email: string }>(response, 'Registration failed');
     },
     onSuccess: (bundle) => {
-      success('Your account was created. Enter the OTP from your email to activate it.');
+      success(
+        'Account created. Enter the OTP from your email (or the API console in local dev) to sign in.',
+      );
       navigate(`/verify-otp?email=${encodeURIComponent(bundle.email)}`);
     },
     onError: (mutationError: Error) => error(mutationError.message),

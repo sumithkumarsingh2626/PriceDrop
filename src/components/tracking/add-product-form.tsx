@@ -46,7 +46,7 @@ export default function AddProductForm() {
   });
 
   const urlHint = useMemo(() => {
-    if (!url) return 'Supported stores: Amazon, BestBuy, Zara';
+    if (!url) return 'Supported stores: Amazon, Flipkart, BestBuy, Zara';
     try {
       const host = new URL(url).hostname.replace(/^www\./, '');
       return `Detected host: ${host}`;

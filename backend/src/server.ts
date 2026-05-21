@@ -1,5 +1,5 @@
 import http from 'http';
-import createApp from './app';
+import { createApp } from './app';
 import { connectDB, disconnectDB } from './configs/db';
 import { env } from './configs/env';
 import { redisConnection } from './configs/redis';

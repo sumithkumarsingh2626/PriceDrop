@@ -4,7 +4,7 @@
  */
 
 import 'dotenv/config';
-import createApp from '../backend/src/app';
+import { createApp } from '../backend/src/app';
 import { connectDB } from '../backend/src/configs/db';
 import { env } from '../backend/src/configs/env';
 

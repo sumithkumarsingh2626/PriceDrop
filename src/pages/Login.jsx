@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock, Mail, Sparkles } from 'lucide-react';
+import { Lock, Mail } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import PublicLayout from '@/layouts/PublicLayout';
 
 export default function Login() {
   const { login, isLoggingIn } = useAuth();
@@ -28,18 +29,11 @@ export default function Login() {
   };
 
   return (
-    <div className="grid-bg flex min-h-screen items-center justify-center bg-[#04110d] px-4 py-10">
-      <Card className="w-full max-w-md p-8">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 inline-flex rounded-2xl bg-emerald-300 p-3 text-emerald-950">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <h1 className="text-3xl font-semibold">Welcome back</h1>
-          <p className="mt-3 text-sm text-emerald-100/65">
-            Sign in to continue monitoring your tracked products.
-          </p>
-        </div>
-
+    <PublicLayout
+      title="Welcome back"
+      subtitle="Sign in to continue monitoring your tracked products."
+    >
+      <Card className="w-full border-white/10 p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             id="email"
@@ -64,15 +58,15 @@ export default function Login() {
           </Button>
         </form>
 
-        <div className="mt-6 flex items-center justify-between text-sm text-emerald-100/60">
-          <Link to="/forgot-password" className="hover:text-emerald-50">
+        <div className="mt-6 flex items-center justify-between text-sm text-slate-400">
+          <Link to="/forgot-password" className="hover:text-brand-cyan">
             Forgot password?
           </Link>
-          <Link to="/register" className="hover:text-emerald-50">
+          <Link to="/register" className="hover:text-brand-purple">
             Create account
           </Link>
         </div>
       </Card>
-    </div>
+    </PublicLayout>
   );
 }

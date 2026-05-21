@@ -1,11 +1,12 @@
 import { Suspense, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
-import { KeyRound, Lock, RefreshCw, Sparkles } from 'lucide-react';
+import { KeyRound, Lock, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import PublicLayout from '@/layouts/PublicLayout';
 
 function VerifyOtpInner() {
   const [searchParams] = useSearchParams();
@@ -22,6 +23,15 @@ function VerifyOtpInner() {
     [mode],
   );
 
+  const subtitle = useMemo(() => {
+    if (mode === 'reset') {
+      return 'Enter the reset OTP and choose a new password.';
+    }
+    return email
+      ? `Enter the OTP sent to ${email}. You will be signed in after verification.`
+      : 'Enter the registration OTP from your email to activate your account.';
+  }, [mode, email]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -30,37 +40,37 @@ function VerifyOtpInner() {
       return;
     }
 
+    if (!email) {
+      setError('Email is missing. Open the link from registration again.');
+      return;
+    }
+
     if (mode === 'reset') {
       if (!newPassword || newPassword !== confirmPassword) {
-        setError('Please enter matching passwords.');
+        setError('Please enter matching passwords (8+ characters).');
         return;
       }
 
       setError('');
-      await resetPassword({ email, otp, newPassword });
+      try {
+        await resetPassword({ email, otp, newPassword });
+      } catch (submissionError) {
+        setError(submissionError instanceof Error ? submissionError.message : 'Reset failed.');
+      }
       return;
     }
 
     setError('');
-    await verifyOtp({ email, otp });
+    try {
+      await verifyOtp({ email, otp });
+    } catch (submissionError) {
+      setError(submissionError instanceof Error ? submissionError.message : 'Verification failed.');
+    }
   };
 
   return (
-    <div className="grid-bg flex min-h-screen items-center justify-center bg-[#04110d] px-4 py-10">
-      <Card className="w-full max-w-md p-8">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 inline-flex rounded-2xl bg-emerald-300 p-3 text-emerald-950">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <h1 className="text-3xl font-semibold">{title}</h1>
-          <p className="mt-3 text-sm text-emerald-100/65">
-            {mode === 'reset'
-              ? 'Enter the reset OTP and choose a new password.'
-              : 'Enter the registration OTP from your email to activate your account.'}
-          </p>
-          <p className="mt-2 text-sm text-emerald-300">{email}</p>
-        </div>
-
+    <PublicLayout title={title} subtitle={subtitle}>
+      <Card className="w-full border-white/10 p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             id="otp"
@@ -97,7 +107,7 @@ function VerifyOtpInner() {
             className="w-full"
             isLoading={mode === 'reset' ? isResetting : isVerifying}
           >
-            {mode === 'reset' ? 'Update password' : 'Verify OTP'}
+            {mode === 'reset' ? 'Update password' : 'Verify and sign in'}
           </Button>
         </form>
 
@@ -113,19 +123,25 @@ function VerifyOtpInner() {
           </Button>
         ) : null}
 
-        <p className="mt-6 text-center text-sm text-emerald-100/60">
-          <Link to="/login" className="text-emerald-300 hover:text-emerald-200">
+        <p className="mt-6 text-center text-sm text-slate-400">
+          <Link to="/login" className="text-brand-purple hover:text-brand-cyan">
             Back to login
           </Link>
         </p>
       </Card>
-    </div>
+    </PublicLayout>
   );
 }
 
 export default function VerifyOtp() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#04110d]" />}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-brand-ink">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-violet border-t-transparent" />
+        </div>
+      }
+    >
       <VerifyOtpInner />
     </Suspense>
   );

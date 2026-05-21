@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import api from '@/services/api.js';
+import { useAuthStore } from '@/store/authStore';
 import { getEnvelopeData } from '@/lib/api-envelope';
 import {
   normalizeHistoryPoint,
@@ -61,9 +62,11 @@ function mapNotification(raw: Record<string, unknown>): NotificationItem {
 
 export function useProducts() {
   const queryClient = useQueryClient();
+  const accessToken = useAuthStore((s) => s.accessToken);
 
   const productsQuery = useQuery<Product[]>({
     queryKey: ['products'],
+    enabled: Boolean(accessToken),
     queryFn: async () => {
       const response = await api.get('/products');
       const bundle = getEnvelopeData<{ products: Record<string, unknown>[] }>(
@@ -82,7 +85,7 @@ export function useProducts() {
       notificationEnabled?: boolean;
       notificationSettings?: Partial<ProductNotificationSettings>;
     }) => {
-      const response = await api.post('/products/track', payload);
+      const response = await api.post('/products/track', payload, { timeout: 90_000 });
       const bundle = getEnvelopeData<{ product: Record<string, unknown> }>(
         response,
         'Unable to track product',
@@ -188,12 +191,16 @@ export function useProducts() {
 export function useProductDetails(
   productId: string | undefined,
   range: '7d' | '1m' | '3m' | 'max' = '1m',
+  options?: { loadProduct?: boolean; loadHistory?: boolean; loadAnalytics?: boolean },
 ) {
   const enabled = Boolean(productId);
+  const loadProduct = options?.loadProduct ?? true;
+  const loadHistory = options?.loadHistory ?? true;
+  const loadAnalytics = options?.loadAnalytics ?? true;
 
   const productQuery = useQuery<Product>({
     queryKey: ['product', productId],
-    enabled,
+    enabled: enabled && loadProduct,
     queryFn: async () => {
       const response = await api.get(`/products/${productId}`);
       const bundle = getEnvelopeData<{ product: Record<string, unknown> }>(
@@ -206,7 +213,7 @@ export function useProductDetails(
 
   const historyQuery = useQuery<PriceHistoryPoint[]>({
     queryKey: ['product-history', productId, range],
-    enabled,
+    enabled: enabled && loadHistory,
     queryFn: async () => {
       const response = await api.get(`/products/${productId}/history`, {
         params: { range },
@@ -221,7 +228,7 @@ export function useProductDetails(
 
   const analyticsQuery = useQuery<ProductAnalytics>({
     queryKey: ['product-analytics', productId],
-    enabled,
+    enabled: enabled && loadAnalytics,
     queryFn: async () => {
       const response = await api.get(`/products/${productId}/analytics`);
       const bundle = getEnvelopeData<{ analytics: ProductAnalytics }>(
@@ -243,9 +250,13 @@ export function useProductDetails(
   };
 }
 
-export function useNotificationsFeed() {
+export function useNotificationsFeed(enabled = true) {
+  const accessToken = useAuthStore((s) => s.accessToken);
+
   const notificationsQuery = useQuery<NotificationItem[]>({
     queryKey: ['notifications-feed'],
+    enabled: enabled && Boolean(accessToken),
+    staleTime: 60_000,
     queryFn: async () => {
       const response = await api.get('/products/notifications/feed');
       const bundle = getEnvelopeData<{ notifications: Record<string, unknown>[] }>(

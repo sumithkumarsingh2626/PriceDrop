@@ -63,4 +63,6 @@ public/        Static assets
 | `npm run dev:web` | Frontend only                     |
 | `npm run dev:api` | API only on port 5000             |
 
-Legacy `frontend/` (Next.js) and standalone `backend/server.ts` remain for reference; the active app is the **root** Vite + `api/` setup.
+**Do not run `cd frontend && npm run dev`** — that folder is the deprecated Next.js app and will show a Next.js error screen. Always use **`npm run dev` from the project root**.
+
+Legacy `frontend/` (Next.js) and standalone `backend/server.ts` remain for reference only; the active app is the **root** Vite + `api/` setup.

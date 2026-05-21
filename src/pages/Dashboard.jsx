@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   ArrowDown,
   Bell,
@@ -26,9 +26,14 @@ export default function Dashboard() {
       ),
     [products, searchQuery],
   );
-  const [selectedProductId] = useState(products[0]?._id);
-  const featuredProductId = selectedProductId ?? filteredProducts[0]?._id;
-  const { product: featuredProduct, history } = useProductDetails(featuredProductId, '1m');
+  const featuredProductId = useMemo(
+    () => filteredProducts[0]?._id,
+    [filteredProducts],
+  );
+  const { product: featuredProduct, history } = useProductDetails(featuredProductId, '1m', {
+    loadProduct: false,
+    loadAnalytics: false,
+  });
 
   const totalTracked = products.length;
   const activeTracked = products.filter((product) => product.trackingStatus === 'active').length;
@@ -55,7 +60,7 @@ export default function Dashboard() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Tracked products" value={String(totalTracked)} hint="All saved tracking entries" icon={ScanSearch} />
-        <StatCard label="Active watches" value={String(activeTracked)} hint="Included in the next daily sweep" icon={Bell} />
+        <StatCard label="Active watches" value={String(activeTracked)} hint="Included in the daily sweep" icon={Bell} />
         <StatCard label="Tracked savings" value={formatCurrency(totalSavings, featuredProduct?.currency ?? 'USD')} hint="Highest price compared to current price" icon={DollarSign} />
         <StatCard label="Targets hit" value={String(targetReady)} hint="Products currently at or below target" icon={ArrowDown} />
       </div>

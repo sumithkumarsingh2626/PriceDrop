@@ -27,7 +27,7 @@
   }
 
   .glass-nav {
-    @apply border-b border-white/5 bg-slate-950/70 backdrop-blur-xl;
+    @apply sticky top-0 z-50 border-b border-white/10 bg-slate-950/55 shadow-glass backdrop-blur-2xl;
   }
 
   .btn-gradient {

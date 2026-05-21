@@ -8,7 +8,7 @@ import Button from '@/components/ui/button';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const { notifications } = useNotificationsFeed();
+  const { notifications } = useNotificationsFeed(false);
   const { searchQuery, setSearchQuery, setAddProductOpen } = useTrackingStore();
   const [mobileOpen, setMobileOpen] = useState(false);
 

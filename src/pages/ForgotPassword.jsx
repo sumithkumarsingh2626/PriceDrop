@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Sparkles } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import PublicLayout from '@/layouts/PublicLayout';
 
 export default function ForgotPassword() {
   const { forgotPassword, isRequestingReset } = useAuth();
@@ -20,22 +21,20 @@ export default function ForgotPassword() {
     }
 
     setError('');
-    await forgotPassword(email);
+
+    try {
+      await forgotPassword(email);
+    } catch (submissionError) {
+      setError(submissionError instanceof Error ? submissionError.message : 'Request failed.');
+    }
   };
 
   return (
-    <div className="grid-bg flex min-h-screen items-center justify-center bg-[#04110d] px-4 py-10">
-      <Card className="w-full max-w-md p-8">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 inline-flex rounded-2xl bg-emerald-300 p-3 text-emerald-950">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <h1 className="text-3xl font-semibold">Forgot your password?</h1>
-          <p className="mt-3 text-sm text-emerald-100/65">
-            We will email a reset OTP to the address associated with your account.
-          </p>
-        </div>
-
+    <PublicLayout
+      title="Forgot your password?"
+      subtitle="We will email a reset OTP to the address associated with your account."
+    >
+      <Card className="w-full border-white/10 p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             id="forgot-password-email"
@@ -51,12 +50,12 @@ export default function ForgotPassword() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-emerald-100/60">
-          <Link to="/login" className="text-emerald-300 hover:text-emerald-200">
+        <p className="mt-6 text-center text-sm text-slate-400">
+          <Link to="/login" className="text-brand-purple hover:text-brand-cyan">
             Back to login
           </Link>
         </p>
       </Card>
-    </div>
+    </PublicLayout>
   );
 }

@@ -77,6 +77,7 @@ export type AvailabilityState = (typeof AvailabilityStates)[keyof typeof Availab
 export const SupportedStores = {
   AMAZON: 'Amazon',
   BESTBUY: 'BestBuy',
+  FLIPKART: 'Flipkart',
   ZARA: 'Zara',
 } as const;
 

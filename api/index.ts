@@ -6,7 +6,7 @@
 import 'dotenv/config';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import serverless from 'serverless-http';
-import createApp from '../backend/src/app';
+import { createApp } from '../backend/src/app';
 import { connectDB, isMongoConnected } from '../backend/src/configs/db';
 
 const app = createApp();

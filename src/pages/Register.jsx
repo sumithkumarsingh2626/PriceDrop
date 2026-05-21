@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock, Mail, Phone, Sparkles, User } from 'lucide-react';
+import { Lock, Mail, Phone, User } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import PublicLayout from '@/layouts/PublicLayout';
 
 export default function Register() {
   const { register, isRegistering } = useAuth();
@@ -23,6 +24,11 @@ export default function Register() {
       return;
     }
 
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -30,27 +36,24 @@ export default function Register() {
 
     setError('');
 
-    await register({
-      fullName,
-      email,
-      password,
-      phoneNumber: phoneNumber || undefined,
-    });
+    try {
+      await register({
+        fullName,
+        email,
+        password,
+        phoneNumber: phoneNumber.trim() || undefined,
+      });
+    } catch (submissionError) {
+      setError(submissionError instanceof Error ? submissionError.message : 'Registration failed.');
+    }
   };
 
   return (
-    <div className="grid-bg flex min-h-screen items-center justify-center bg-[#04110d] px-4 py-10">
-      <Card className="w-full max-w-lg p-8">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 inline-flex rounded-2xl bg-emerald-300 p-3 text-emerald-950">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <h1 className="text-3xl font-semibold">Create your tracker account</h1>
-          <p className="mt-3 text-sm text-emerald-100/65">
-            We will send a one-time password to verify the account before first login.
-          </p>
-        </div>
-
+    <PublicLayout
+      title="Create your tracker account"
+      subtitle="We send a one-time password to your email. After verification you are signed in automatically."
+    >
+      <Card className="w-full border-white/10 p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid gap-5 md:grid-cols-2">
             <Input
@@ -62,11 +65,11 @@ export default function Register() {
             />
             <Input
               id="phone-number"
-              label="Phone number"
+              label="Phone (optional)"
               value={phoneNumber}
               onChange={(event) => setPhoneNumber(event.target.value)}
               leftIcon={<Phone className="h-4 w-4" />}
-              placeholder="+15551234567"
+              placeholder="+919876543210"
             />
           </div>
           <Input
@@ -95,19 +98,19 @@ export default function Register() {
               leftIcon={<Lock className="h-4 w-4" />}
             />
           </div>
-          {error ? <p className="text-sm text-rose-200">{error}</p> : null}
+          {error ? <p className="text-sm text-rose-300">{error}</p> : null}
           <Button type="submit" className="w-full" isLoading={isRegistering}>
             Register and send OTP
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-emerald-100/60">
+        <p className="mt-6 text-center text-sm text-slate-400">
           Already have an account?{' '}
-          <Link to="/login" className="text-emerald-300 hover:text-emerald-200">
+          <Link to="/login" className="text-brand-purple hover:text-brand-cyan">
             Sign in
           </Link>
         </p>
       </Card>
-    </div>
+    </PublicLayout>
   );
 }
