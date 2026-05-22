@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import Button from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-const stores = ['Amazon', 'Best Buy', 'Zara', 'Walmart', 'Target'];
 const features = [
   {
     icon: 'bi-graph-up-arrow',
@@ -54,7 +53,7 @@ export default function Landing() {
               Never miss a <span className="text-gradient">price drop</span> again.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400">
-              Track products across major stores, visualize trends with Recharts, and get alerted the moment prices hit your target.
+              Track products from any e-commerce site, visualize price trends, and get alerted the moment prices hit your target.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link to="/register">
@@ -69,9 +68,9 @@ export default function Landing() {
               </Link>
             </div>
             <div className="mt-10 flex flex-wrap gap-6 text-sm text-slate-500">
-              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />OTP email verify</span>
-              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />MongoDB backed</span>
-              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Deploy on Vercel</span>
+              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Real-time Price Tracking</span>
+              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Instant Price Drop Alerts</span>
+              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Universal E-commerce Support</span>
             </div>
           </motion.div>
 
@@ -113,14 +112,16 @@ export default function Landing() {
           </motion.div>
         </section>
 
-        <section className="mt-24">
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Supported stores</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
-            {stores.map((s) => (
-              <span key={s} className="glass-card px-5 py-2 text-sm text-slate-300">
-                {s}
-              </span>
-            ))}
+        <section className="mt-24 text-center">
+          <div className="mx-auto max-w-3xl glass-card border-white/5 p-8 relative overflow-hidden">
+            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-brand-violet/10 to-brand-cyan/10 blur-2xl" />
+            <div className="relative">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-cyan">Universal Tracking</p>
+              <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">Supports all e-commerce sites</h2>
+              <p className="mt-4 text-lg text-slate-400">
+                Any product link can be tracked. Simply paste the URL and our tool will automatically add it to your dashboard and monitor for price drops.
+              </p>
+            </div>
           </div>
         </section>
 
