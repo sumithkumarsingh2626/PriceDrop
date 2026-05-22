@@ -16,7 +16,7 @@ export default function Sidebar() {
   const nav = role === 'admin' ? [...links, { to: '/admin', label: 'Admin', icon: Shield }] : links;
 
   return (
-    <aside className="hidden w-72 shrink-0 flex-col border-r border-white/5 bg-slate-950/80 px-4 py-6 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r border-white/5 bg-slate-950/80 px-4 py-6 lg:flex">
       <div className="glass-card p-5">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-violet to-brand-cyan text-lg font-bold text-white">
