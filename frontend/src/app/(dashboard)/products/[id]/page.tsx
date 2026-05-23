@@ -2,12 +2,16 @@
 
 import { useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Bell, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Bell, RefreshCw, ToggleLeft, ToggleRight, GitCompare } from 'lucide-react';
 import { useProductDetails, useProducts } from '@/hooks/useProducts';
+import { useComparisons } from '@/hooks/useComparisons';
 import { Card } from '@/components/ui/card';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
-import PriceHistoryChart from '@/components/analytics/price-history-chart';
+import { PriceGraph } from '@/components/graph/PriceGraph';
+import { ComparisonTable } from '@/components/comparison/ComparisonTable';
+import { RecommendationGrid } from '@/components/recommendations/RecommendationGrid';
+import { useRecommendations } from '@/hooks/useRecommendations';
 import { formatCurrency, formatDate, percentLabel } from '@/lib/utils';
 
 export default function ProductDetailPage() {
@@ -15,6 +19,8 @@ export default function ProductDetailPage() {
   const [range, setRange] = useState<'7d' | '1m' | '3m' | 'max'>('1m');
   const { product, history, analytics, isLoading } = useProductDetails(params.id, range);
   const { refreshProduct, updateNotifications, updateTracking } = useProducts();
+  const { comparisons, isLoading: isLoadingComparisons, error: comparisonError, refresh: refreshComparisons, isRefreshing: isRefreshingComparisons } = useComparisons(params.id);
+  const { recommendations, isLoading: isLoadingRecs, error: recError } = useRecommendations(params.id);
   const [targetPrice, setTargetPrice] = useState('');
 
   const latestDrop = useMemo(
@@ -145,7 +151,7 @@ export default function ProductDetailPage() {
               ))}
             </div>
           </div>
-          <PriceHistoryChart history={history} currency={product.currency} />
+          <PriceGraph history={history} currency={product.currency} />
         </Card>
 
         <Card className="space-y-5">
@@ -245,6 +251,44 @@ export default function ProductDetailPage() {
             Latest drop recorded at {formatDate(latestDrop.scrapedAt)}.
           </p>
         ) : null}
+      </Card>
+
+      {/* Feature 4: Cross-Platform Price Comparison */}
+      <Card className="space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-xs uppercase tracking-[0.22em] text-emerald-200/60">Platform comparison</p>
+            <h2 className="mt-2 text-2xl font-semibold">Price across platforms</h2>
+          </div>
+          <Button
+            variant="secondary"
+            leftIcon={<GitCompare className="h-4 w-4" />}
+            onClick={() => void refreshComparisons()}
+            disabled={isRefreshingComparisons}
+          >
+            {isRefreshingComparisons ? 'Fetching...' : 'Refresh comparisons'}
+          </Button>
+        </div>
+        <ComparisonTable
+          comparisons={comparisons}
+          isLoading={isLoadingComparisons}
+          currency={product?.currency}
+          error={comparisonError}
+        />
+      </Card>
+
+      {/* Feature 10: Smart Product Alternatives */}
+      <Card className="space-y-5">
+        <div>
+          <p className="text-xs uppercase tracking-[0.22em] text-emerald-200/60">Smart Alternatives</p>
+          <h2 className="mt-2 text-2xl font-semibold">Recommended alternatives</h2>
+        </div>
+        <RecommendationGrid 
+          recommendations={recommendations} 
+          baseProduct={product} 
+          isLoading={isLoadingRecs} 
+          error={recError} 
+        />
       </Card>
     </div>
   );
