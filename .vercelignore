@@ -1,0 +1,6 @@
+# Backend/API code is deployed on Render, not Vercel.
+api
+backend
+
+# Deprecated Next.js folder (not used for Vercel deploy).
+frontend

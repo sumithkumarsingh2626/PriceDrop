@@ -1,17 +1,19 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
+  "framework": "vite",
+  "installCommand": "npm install",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": null,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" },
-    { "source": "/health", "destination": "/api" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ],
-  "functions": {
-    "api/index.ts": {
-      "maxDuration": 30,
-      "memory": 1024
-    }
-  }
+    {
+      "source": "/api/:path*",
+      "destination": "https://price-drop-alert-backend-kda5.onrender.com/api/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://price-drop-alert-backend-kda5.onrender.com/health"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
