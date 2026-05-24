@@ -36,6 +36,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "recharts": "^2.13.3",
+    "resend": "^6.12.3",
     "serverless-http": "^3.2.0",
     "tailwind-merge": "^2.6.1",
     "winston": "^3.13.0",
