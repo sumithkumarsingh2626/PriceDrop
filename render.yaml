@@ -23,11 +23,10 @@ services:
         placeholder: "https://your-frontend-domain.vercel.app"
 
       - key: REDIS_ENABLED
-        value: "false" # Default to false for Free tier (runs internal scheduler)
+        value: "true"
       
       - key: REDIS_URL
-        sync: false
-        placeholder: "redis://your-redis-server:6379"
+        value: "redis://default:qUPEInuoGBgkjWrqawmTIUhIwVZfBsPI@hearty-megasnug-hobbies-14516.db.redis.io:17574"
 
       - key: JWT_SECRET
         generateValue: true # Render will automatically generate a secure random 256-bit string
