@@ -6,10 +6,7 @@ import axios from 'axios';
 import type { ApiErrorBody } from '@/types/api.types';
 import { useAuthStore } from '@/store/authStore';
 
-const API_URL =
-  typeof window !== 'undefined'
-    ? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api'
-    : process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api';
 
 export const api = axios.create({
   baseURL: API_URL,
