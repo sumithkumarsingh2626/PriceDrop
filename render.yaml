@@ -62,7 +62,7 @@ services:
         value: "10"
       - key: PASSWORD_RESET_EXPIRY_MINUTES
         value: "15"
-      - key: BCRYPT_COST_PASSWORD:
+      - key: BCRYPT_COST_PASSWORD
         value: "12"
       - key: BCRYPT_COST_OTP
         value: "10"
