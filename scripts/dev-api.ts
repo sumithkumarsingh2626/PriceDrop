@@ -3,10 +3,18 @@
  * Production on Vercel uses api/index.ts serverless handler instead.
  */
 
-import 'dotenv/config';
-import { createApp } from '../backend/src/app';
-import { connectDB } from '../backend/src/configs/db';
-import { env } from '../backend/src/configs/env';
+import dotenv from 'dotenv';
+
+// Load repo `.env` first so DB/API keys are available locally.
+dotenv.config();
+// Dev server should behave like development even if the repo's `.env` is production-focused.
+process.env.NODE_ENV = 'development';
+
+const [{ createApp }, { connectDB }, { env }] = await Promise.all([
+  import('../backend/src/app'),
+  import('../backend/src/configs/db'),
+  import('../backend/src/configs/env'),
+]);
 
 const app = createApp();
 

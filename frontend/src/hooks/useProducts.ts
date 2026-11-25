@@ -45,7 +45,7 @@ function mapNotification(raw: Record<string, unknown>): NotificationItem {
       raw.channel === 'whatsapp' ||
       raw.channel === 'push'
         ? raw.channel
-        : 'email',
+        : 'push',
     status:
       raw.status === 'pending' ||
       raw.status === 'failed' ||

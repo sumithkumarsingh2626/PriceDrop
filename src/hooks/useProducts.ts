@@ -46,7 +46,7 @@ function mapNotification(raw: Record<string, unknown>): NotificationItem {
       raw.channel === 'whatsapp' ||
       raw.channel === 'push'
         ? raw.channel
-        : 'email',
+        : 'push',
     status:
       raw.status === 'pending' ||
       raw.status === 'failed' ||
@@ -172,6 +172,18 @@ export function useProducts() {
     },
   });
 
+  const deleteProductMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/products/${id}`);
+    },
+    onSuccess: (_data, id) => {
+      void queryClient.invalidateQueries({ queryKey: ['products'] });
+      void queryClient.removeQueries({ queryKey: ['product', id] });
+      void queryClient.removeQueries({ queryKey: ['product-history', id] });
+      void queryClient.removeQueries({ queryKey: ['product-analytics', id] });
+    },
+  });
+
   return {
     products: productsQuery.data ?? [],
     isLoading: productsQuery.isLoading,
@@ -185,8 +197,11 @@ export function useProducts() {
     isUpdatingTracking: updateTrackingMutation.isPending,
     refreshProduct: refreshProductMutation.mutateAsync,
     isRefreshingProduct: refreshProductMutation.isPending,
+    deleteProduct: deleteProductMutation.mutateAsync,
+    isDeletingProduct: deleteProductMutation.isPending,
   };
 }
+
 
 export function useProductDetails(
   productId: string | undefined,

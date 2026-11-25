@@ -185,7 +185,6 @@ export default function ProductDetailPage() {
           <div className="space-y-3">
             {(
               [
-                ['email', 'Email'],
                 ['whatsapp', 'WhatsApp'],
                 ['sms', 'SMS'],
                 ['push', 'Push'],

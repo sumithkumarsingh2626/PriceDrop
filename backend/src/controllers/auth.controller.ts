@@ -1,10 +1,8 @@
-import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import { env } from '../configs/env';
 import { HttpStatus } from '../constants';
 import { User, type IUser } from '../models/user.model';
-import { sendOtpEmail } from '../services/email.service';
 import {
   decodeToken,
   generateAccessToken,
@@ -13,26 +11,11 @@ import {
 } from '../services/token.service';
 import { asyncHandler } from '../utils/async-handler.util';
 import { sendSuccess } from '../utils/api-response.util';
-import { logger } from '../utils/logger';
 import {
-  AppError,
-  BadRequestError,
   ConflictError,
-  ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from '../utils/AppError';
-
-function buildOtp(): string {
-  return crypto.randomInt(0, 10 ** env.OTP_LENGTH).toString().padStart(env.OTP_LENGTH, '0');
-}
-
-async function createOtpBundle(minutes: number): Promise<{ otp: string; hash: string; expiresAt: Date }> {
-  const otp = buildOtp();
-  const hash = await bcrypt.hash(otp, env.BCRYPT_COST_OTP);
-  const expiresAt = new Date(Date.now() + minutes * 60_000);
-  return { otp, hash, expiresAt };
-}
 
 function setAuthCookies(res: Response, accessToken: string, refreshToken: string): void {
   const secure = env.NODE_ENV === 'production';
@@ -68,6 +51,9 @@ function clearAuthCookies(res: Response): void {
   });
 }
 
+import { Otp } from '../models/otp.model';
+import { emailService } from '../services/email.service';
+
 function sanitizeUser(user: IUser): Record<string, unknown> {
   return {
     id: user._id,
@@ -77,6 +63,7 @@ function sanitizeUser(user: IUser): Record<string, unknown> {
     profileImage: user.profileImage,
     isVerified: user.isVerified,
     notificationPreferences: user.notificationPreferences,
+    notificationsSubscribed: user.notificationsSubscribed,
     role: user.role,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -94,119 +81,62 @@ async function issueSession(user: IUser, res: Response): Promise<{ accessToken: 
   return { accessToken, refreshToken };
 }
 
+async function sendOtp(email: string, type: 'REGISTER' | 'LOGIN'): Promise<void> {
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
+  const otpHash = await bcrypt.hash(otpCode, 10);
+  const expiresAt = new Date(Date.now() + env.OTP_EXPIRY_MINUTES * 60000);
+
+  // Remove existing OTP for this email and type
+  await Otp.deleteMany({ email, type });
+
+  await Otp.create({
+    email,
+    otpHash,
+    type,
+    expiresAt,
+  });
+
+  await emailService.sendOtpEmail(email, otpCode, type);
+}
+
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { fullName, email, password, phoneNumber, profileImage } = req.body as {
+  const { fullName, email, phoneNumber, password, profileImage, notificationsSubscribed } = req.body as {
     fullName: string;
     email: string;
+    phoneNumber: string;
     password: string;
-    phoneNumber?: string;
     profileImage?: string;
+    notificationsSubscribed?: boolean;
   };
 
-  const existing = await User.findOne({ email });
-
-  if (existing?.isVerified) {
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) {
     throw new ConflictError('An account with this email already exists.');
   }
 
-  const passwordHash = await bcrypt.hash(password, env.BCRYPT_COST_PASSWORD);
-  const { otp, hash, expiresAt } = await createOtpBundle(env.OTP_EXPIRY_MINUTES);
-
-  const user =
-    existing ??
-    new User({
-      email,
-    });
-
-  user.fullName = fullName;
-  user.passwordHash = passwordHash;
-  user.phoneNumber = phoneNumber;
-  user.profileImage = profileImage;
-  user.isVerified = false;
-  user.otpCode = hash;
-  user.otpExpiresAt = expiresAt;
-  user.resetPasswordOtpCode = undefined;
-  user.resetPasswordOtpExpiresAt = undefined;
-
-  await user.save();
-
-  try {
-    await sendOtpEmail(email, otp, 'verification');
-  } catch (mailError) {
-    const message = mailError instanceof Error ? mailError.message : String(mailError);
-    logger.error(`Registration OTP email failed for ${email}: ${message}`);
-
-    if (env.NODE_ENV === 'production') {
-      throw new AppError(
-        'Account created but verification email could not be sent. Try resend OTP or contact support.',
-        HttpStatus.SERVICE_UNAVAILABLE,
-      );
-    }
-
-    logger.warn(`[DEV] Registration OTP for ${email}: ${otp}`);
+  const existingPhone = await User.findOne({ phoneNumber });
+  if (existingPhone) {
+    throw new ConflictError('An account with this phone number already exists.');
   }
 
+  const passwordHash = await bcrypt.hash(password, env.BCRYPT_COST_PASSWORD);
+  await User.create({
+    fullName,
+    email,
+    phoneNumber,
+    passwordHash,
+    profileImage,
+    notificationsSubscribed: notificationsSubscribed ?? true,
+    isVerified: false, // Remains false until OTP is verified
+  });
+
+  await sendOtp(email, 'REGISTER');
+
   sendSuccess(
     res,
-    {
-      email,
-      otpExpiresAt: expiresAt,
-    },
-    'Registration successful. Please verify the OTP sent to your email.',
+    { otpRequired: true, email },
+    'Registration successful. Please verify your OTP.',
     HttpStatus.CREATED,
-  );
-});
-
-export const verifyOtp = asyncHandler(async (req: Request, res: Response) => {
-  const { email, otp } = req.body as { email: string; otp: string };
-
-  const user = await User.findOne({ email });
-  if (!user) throw new NotFoundError('User not found');
-  if (user.isVerified) throw new BadRequestError('Account is already verified.');
-  if (!user.otpCode || !user.otpExpiresAt) throw new BadRequestError('No OTP is pending for this account.');
-  if (user.otpExpiresAt < new Date()) throw new AppError('OTP expired. Please request a new code.', HttpStatus.GONE);
-
-  const isMatch = await bcrypt.compare(otp, user.otpCode);
-  if (!isMatch) throw new UnauthorizedError('Invalid OTP.');
-
-  user.isVerified = true;
-  user.otpCode = undefined;
-  user.otpExpiresAt = undefined;
-
-  const session = await issueSession(user, res);
-
-  sendSuccess(
-    res,
-    {
-      ...session,
-      user: sanitizeUser(user),
-    },
-    'OTP verified successfully.',
-  );
-});
-
-export const resendOtp = asyncHandler(async (req: Request, res: Response) => {
-  const { email } = req.body as { email: string };
-
-  const user = await User.findOne({ email });
-
-  if (!user) throw new NotFoundError('User not found');
-  if (user.isVerified) throw new BadRequestError('Account is already verified.');
-
-  const { otp, hash, expiresAt } = await createOtpBundle(env.OTP_EXPIRY_MINUTES);
-  user.otpCode = hash;
-  user.otpExpiresAt = expiresAt;
-  await user.save();
-
-  await sendOtpEmail(email, otp, 'verification');
-
-  sendSuccess(
-    res,
-    {
-      email,
-      otpExpiresAt: expiresAt,
-    },
-    'A new OTP has been sent.',
   );
 });
 
@@ -215,17 +145,41 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   const user = await User.findOne({ email }).select('+activeRefreshTokenHash');
   if (!user) throw new UnauthorizedError('Invalid email or password.');
-  if (!user.isVerified) throw new ForbiddenError('Please verify your email before logging in.');
 
   const passwordMatches = await bcrypt.compare(password, user.passwordHash);
   if (!passwordMatches) throw new UnauthorizedError('Invalid email or password.');
+
+  await sendOtp(email, 'LOGIN');
+
+  sendSuccess(res, { otpRequired: true, email }, 'OTP sent to email. Please verify to login.');
+});
+
+export const verifyOtp = asyncHandler(async (req: Request, res: Response) => {
+  const { email, otp, type } = req.body as { email: string; otp: string; type: 'REGISTER' | 'LOGIN' };
+
+  const otpRecord = await Otp.findOne({ email, type });
+  if (!otpRecord) throw new UnauthorizedError('OTP not found or expired.');
+
+  const isValid = await bcrypt.compare(otp, otpRecord.otpHash);
+  if (!isValid) throw new UnauthorizedError('Invalid OTP.');
+
+  const user = await User.findOne({ email });
+  if (!user) throw new NotFoundError('User not found.');
+
+  if (type === 'REGISTER' && !user.isVerified) {
+    user.isVerified = true;
+    await user.save();
+  }
+
+  // Delete the OTP record as it has been successfully used
+  await Otp.deleteOne({ _id: otpRecord._id });
 
   const session = await issueSession(user, res);
 
   sendSuccess(res, {
     ...session,
     user: sanitizeUser(user),
-  });
+  }, 'Verification successful.');
 });
 
 export const refreshTokens = asyncHandler(async (req: Request, res: Response) => {
@@ -278,64 +232,6 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 
   clearAuthCookies(res);
   sendSuccess(res, undefined, 'Logged out successfully.');
-});
-
-export const forgotPassword = asyncHandler(async (req: Request, res: Response) => {
-  const { email } = req.body as { email: string };
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    sendSuccess(res, undefined, 'If the email exists, a reset OTP has been sent.');
-    return;
-  }
-
-  const { otp, hash, expiresAt } = await createOtpBundle(env.PASSWORD_RESET_EXPIRY_MINUTES);
-  user.resetPasswordOtpCode = hash;
-  user.resetPasswordOtpExpiresAt = expiresAt;
-  await user.save();
-
-  await sendOtpEmail(email, otp, 'password_reset');
-
-  sendSuccess(
-    res,
-    {
-      email,
-      otpExpiresAt: expiresAt,
-    },
-    'If the email exists, a reset OTP has been sent.',
-  );
-});
-
-export const resetPassword = asyncHandler(async (req: Request, res: Response) => {
-  const { email, otp, newPassword } = req.body as {
-    email: string;
-    otp: string;
-    newPassword: string;
-  };
-
-  const user = await User.findOne({ email }).select('+activeRefreshTokenHash');
-
-  if (!user || !user.resetPasswordOtpCode || !user.resetPasswordOtpExpiresAt) {
-    throw new BadRequestError('No password reset request is pending.');
-  }
-
-  if (user.resetPasswordOtpExpiresAt < new Date()) {
-    throw new AppError('OTP expired. Please request a new reset code.', HttpStatus.GONE);
-  }
-
-  const isMatch = await bcrypt.compare(otp, user.resetPasswordOtpCode);
-  if (!isMatch) throw new UnauthorizedError('Invalid OTP.');
-
-  user.passwordHash = await bcrypt.hash(newPassword, env.BCRYPT_COST_PASSWORD);
-  user.resetPasswordOtpCode = undefined;
-  user.resetPasswordOtpExpiresAt = undefined;
-  user.activeRefreshTokenHash = undefined;
-  await user.save();
-
-  clearAuthCookies(res);
-
-  sendSuccess(res, undefined, 'Password reset successful.');
 });
 
 export const adminPing = asyncHandler(async (_req: Request, res: Response) => {

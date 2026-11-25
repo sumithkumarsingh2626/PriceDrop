@@ -95,7 +95,7 @@ export default function Navbar() {
           </div>
           <div className="hidden text-end md:block">
             <p className="text-xs text-slate-500">Signed in</p>
-            <p className="text-sm font-semibold">{user?.fullName || user?.email}</p>
+            <p className="mt-1 text-sm font-semibold text-emerald-50">{user?.fullName || user?.phoneNumber}</p>
           </div>
           <Button variant="ghost" size="sm" onClick={() => logout()}>
             Logout

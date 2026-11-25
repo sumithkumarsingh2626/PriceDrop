@@ -103,7 +103,7 @@ export default function LandingPage() {
                   <Bell className="h-5 w-5 text-emerald-300" />
                   <h4 className="mt-4 text-lg font-semibold">Target alerts</h4>
                   <p className="mt-2 text-sm leading-6 text-emerald-100/65">
-                    Email, WhatsApp, SMS, and push switches can be set differently for every tracked item.
+                    WhatsApp, SMS, and push switches can be set differently for every tracked item.
                   </p>
                 </Card>
               </div>

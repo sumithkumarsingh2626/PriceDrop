@@ -9,7 +9,7 @@ import { mapApiUser } from '@/lib/map-user';
 import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/providers/ToastProvider';
 
-const PUBLIC_PREFIXES = ['/login', '/register', '/forgot-password', '/verify-otp'];
+const PUBLIC_PREFIXES = ['/login', '/register'];
 
 function isPublicPath(pathname: string): boolean {
   if (pathname === '/') return true;
@@ -137,7 +137,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       router.replace('/login');
     }
 
-    if (authed && (pathname === '/login' || pathname === '/register' || pathname === '/forgot-password')) {
+    if (authed && (pathname === '/login' || pathname === '/register')) {
       router.replace('/dashboard');
     }
   }, [pathname, router, sessionReady]);

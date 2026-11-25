@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { objectIdSchema } from './common.validator';
 
 const notificationSettingsSchema = z.object({
-  email: z.boolean().optional(),
   whatsapp: z.boolean().optional(),
   sms: z.boolean().optional(),
   push: z.boolean().optional(),

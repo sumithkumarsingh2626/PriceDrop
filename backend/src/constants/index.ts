@@ -33,7 +33,6 @@ export const QueueNames = {
 export type QueueName = (typeof QueueNames)[keyof typeof QueueNames];
 
 export const NotificationChannels = {
-  EMAIL: 'email',
   SMS: 'sms',
   WHATSAPP: 'whatsapp',
   PUSH: 'push',

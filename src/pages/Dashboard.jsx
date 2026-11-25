@@ -4,6 +4,7 @@ import {
   Bell,
   DollarSign,
   LineChart,
+  PackageSearch,
   ScanSearch,
 } from 'lucide-react';
 import { useNotificationsFeed, useProductDetails, useProducts } from '@/hooks/useProducts';
@@ -13,10 +14,11 @@ import StatCard from '@/components/dashboard/stat-card';
 import NotificationFeed from '@/components/dashboard/notification-feed';
 import TrackedProductCard from '@/components/dashboard/tracked-product-card';
 import PriceHistoryChart from '@/components/analytics/price-history-chart';
+import { ProductCardSkeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 
 export default function Dashboard() {
-  const { products, refreshProduct, updateTracking, updateNotifications, isLoading } = useProducts();
+  const { products, refreshProduct, updateTracking, updateNotifications, deleteProduct, isLoading } = useProducts();
   const { notifications } = useNotificationsFeed();
   const { searchQuery } = useTrackingStore();
   const filteredProducts = useMemo(
@@ -93,9 +95,25 @@ export default function Dashboard() {
         </div>
 
         {isLoading ? (
-          <Card>Loading tracked products...</Card>
+          <div className="grid gap-5 lg:grid-cols-2" aria-busy="true" aria-label="Loading products">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
         ) : filteredProducts.length === 0 ? (
-          <Card>No products match your current search.</Card>
+          <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-emerald-500/10 bg-emerald-950/20 py-16 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/20 bg-emerald-950/40">
+              <PackageSearch className="h-7 w-7 text-emerald-400/60" />
+            </div>
+            <p className="text-lg font-semibold text-emerald-50">
+              {products.length === 0 ? 'No products tracked yet' : 'Nothing matches your search'}
+            </p>
+            <p className="max-w-xs text-sm text-emerald-200/50">
+              {products.length === 0
+                ? 'Paste a product URL in the search bar above to start tracking.'
+                : 'Try a different search term.'}
+            </p>
+          </div>
         ) : (
           <div className="grid gap-5 lg:grid-cols-2">
             {filteredProducts.slice(0, 4).map((product) => (
@@ -103,6 +121,7 @@ export default function Dashboard() {
                 key={product._id}
                 product={product}
                 onRefresh={refreshProduct}
+                onDelete={deleteProduct}
                 onToggleTracking={(currentProduct) =>
                   updateTracking({
                     id: currentProduct._id,

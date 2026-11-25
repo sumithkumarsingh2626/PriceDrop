@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { asyncHandler } from '../utils/async-handler.util';
 import { sendSuccess } from '../utils/api-response.util';
 import {
+  deleteProductForUser,
   getProductAnalyticsForUser,
   getProductForUser,
   getProductHistoryForUser,
@@ -92,4 +93,10 @@ export const notificationFeed = asyncHandler(async (req: Request, res: Response)
   const userId = requireUserId(req);
   const notifications = await getRecentNotifications(userId);
   sendSuccess(res, { notifications }, 'Recent notifications fetched.');
+});
+
+export const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
+  const userId = requireUserId(req);
+  await deleteProductForUser(userId, req.params.id);
+  res.status(HttpStatus.NO_CONTENT).send();
 });

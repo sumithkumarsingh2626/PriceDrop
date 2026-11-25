@@ -1,5 +1,4 @@
 export interface NotificationPreferences {
-  email: boolean;
   whatsapp: boolean;
   sms: boolean;
   push: boolean;
@@ -14,9 +13,10 @@ export interface User {
   id: string;
   fullName: string;
   email: string;
-  phoneNumber?: string;
+  phoneNumber: string;
   profileImage?: string;
   isVerified: boolean;
+  notificationsSubscribed: boolean;
   notificationPreferences: NotificationPreferences;
   role: 'user' | 'admin';
   createdAt?: string;
@@ -75,7 +75,7 @@ export interface NotificationItem {
     storeName?: string;
   };
   notificationType: 'price_drop' | 'target_price' | 'system';
-  channel: 'email' | 'sms' | 'whatsapp' | 'push';
+  channel: 'sms' | 'whatsapp' | 'push';
   status: 'pending' | 'sent' | 'failed' | 'skipped';
   sentAt?: string;
   messageBody: string;

@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   resolve: {
+    preserveSymlinks: true,
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
@@ -13,12 +14,14 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5000',
+        target: process.env.VITE_PROXY_TARGET || 'https://price-drop-alert-backend-kda5.onrender.com',
         changeOrigin: true,
+        secure: false,
       },
       '/health': {
-        target: 'http://127.0.0.1:5000',
+        target: process.env.VITE_PROXY_TARGET || 'https://price-drop-alert-backend-kda5.onrender.com',
         changeOrigin: true,
+        secure: false,
       },
     },
   },

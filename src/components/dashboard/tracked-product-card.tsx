@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Bell,
@@ -5,6 +6,7 @@ import {
   PauseCircle,
   PlayCircle,
   RefreshCw,
+  Trash2,
 } from 'lucide-react';
 import Button from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -16,6 +18,7 @@ interface TrackedProductCardProps {
   onRefresh: (id: string) => Promise<unknown>;
   onToggleTracking: (product: Product) => Promise<unknown>;
   onToggleNotifications: (product: Product) => Promise<unknown>;
+  onDelete?: (id: string) => Promise<unknown>;
 }
 
 export default function TrackedProductCard({
@@ -23,7 +26,15 @@ export default function TrackedProductCard({
   onRefresh,
   onToggleTracking,
   onToggleNotifications,
+  onDelete,
 }: TrackedProductCardProps) {
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const handleDelete = async () => {
+    if (!onDelete) return;
+    await onDelete(product._id);
+  };
+
   return (
     <Card hoverGlow className="flex h-full flex-col gap-5">
       <div className="flex gap-4">
@@ -86,6 +97,32 @@ export default function TrackedProductCard({
         Last scrape: {product.lastScrapedAt ? formatRelativeDate(product.lastScrapedAt) : 'Waiting for first refresh'}
       </div>
 
+      {/* Confirm-delete banner */}
+      {confirmDelete && (
+        <div
+          className="rounded-2xl border border-rose-500/30 bg-rose-950/40 px-4 py-3 text-sm text-rose-200"
+          role="alert"
+        >
+          <p className="mb-3 font-medium">Remove this product and all its price history?</p>
+          <div className="flex gap-2">
+            <Button
+              variant="danger"
+              className="flex-1"
+              onClick={() => void handleDelete()}
+            >
+              Yes, delete
+            </Button>
+            <Button
+              variant="ghost"
+              className="flex-1"
+              onClick={() => setConfirmDelete(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="mt-auto flex flex-wrap gap-2">
         <Link to={`/products/${product._id}`} className="flex-1 min-w-[140px]">
           <Button variant="outline" className="w-full" leftIcon={<ExternalLink className="h-4 w-4" />}>
@@ -119,6 +156,17 @@ export default function TrackedProductCard({
         >
           {product.trackingStatus === 'active' ? 'Pause' : 'Resume'}
         </Button>
+        {onDelete && !confirmDelete && (
+          <Button
+            variant="ghost"
+            aria-label="Delete product"
+            onClick={() => setConfirmDelete(true)}
+            leftIcon={<Trash2 className="h-4 w-4 text-rose-400" />}
+            className="text-rose-400 hover:bg-rose-950/40"
+          >
+            Delete
+          </Button>
+        )}
       </div>
     </Card>
   );

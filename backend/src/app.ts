@@ -12,6 +12,51 @@ import healthRoutes from './routes/health.routes';
 import apiRoutes from './routes/index';
 import { ForbiddenError } from './utils/AppError';
 
+function normalizeOrigin(value: string): string {
+  const trimmed = value.trim().replace(/\/+$/, '');
+
+  try {
+    const url = new URL(trimmed);
+    const protocol = url.protocol.toLowerCase();
+    let hostname = url.hostname.toLowerCase();
+
+    // Treat loopback aliases as equivalent to reduce local CORS mismatches.
+    if (hostname === '127.0.0.1' || hostname === '::1') {
+      hostname = 'localhost';
+    }
+
+    const port = url.port;
+    return `${protocol}//${hostname}${port ? `:${port}` : ''}`;
+  } catch {
+    // If it's not a valid URL (e.g. wildcard patterns), fall back to trimmed string.
+    return trimmed;
+  }
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function buildOriginAllowlistChecker(clientUrls: string[]): (origin: string) => boolean {
+  const normalized = clientUrls.map(normalizeOrigin).filter(Boolean);
+
+  const exact = new Set(normalized.filter((value) => !value.includes('*')));
+  const wildcards = normalized
+    .filter((value) => value.includes('*'))
+    .map((pattern) => {
+      // Convert simple wildcard patterns into a safe anchored regex.
+      const parts = pattern.split('*').map(escapeRegExp);
+      return new RegExp(`^${parts.join('.*')}$`, 'i');
+    });
+
+  return (origin: string) => {
+    const normalizedOrigin = normalizeOrigin(origin);
+
+    if (exact.has(normalizedOrigin)) return true;
+    return wildcards.some((re) => re.test(normalizedOrigin));
+  };
+}
+
 function resolveCorsOrigin(): cors.CorsOptions['origin'] {
   if (env.NODE_ENV !== 'production') {
     return true;
@@ -21,8 +66,10 @@ function resolveCorsOrigin(): cors.CorsOptions['origin'] {
     return true;
   }
 
+  const isOriginAllowed = buildOriginAllowlistChecker(env.CLIENT_URLS);
+
   return (origin, callback) => {
-    if (!origin || env.CLIENT_URLS.includes(origin)) {
+    if (!origin || isOriginAllowed(origin)) {
       callback(null, true);
       return;
     }

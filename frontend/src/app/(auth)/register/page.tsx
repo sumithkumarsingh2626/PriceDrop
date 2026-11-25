@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Lock, Mail, Phone, Sparkles, User } from 'lucide-react';
+import { Lock, Phone, Sparkles, User } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
@@ -11,7 +11,6 @@ import { Card } from '@/components/ui/card';
 export default function RegisterPage() {
   const { register, isRegistering } = useAuth();
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -20,8 +19,8 @@ export default function RegisterPage() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!fullName || !email || !password) {
-      setError('Full name, email, and password are required.');
+    if (!fullName || !phoneNumber || !password) {
+      setError('Full name, phone number, and password are required.');
       return;
     }
 
@@ -34,9 +33,8 @@ export default function RegisterPage() {
 
     await register({
       fullName,
-      email,
+      phoneNumber,
       password,
-      phoneNumber: phoneNumber || undefined,
     });
   };
 
@@ -49,7 +47,7 @@ export default function RegisterPage() {
           </div>
           <h1 className="text-3xl font-semibold">Create your tracker account</h1>
           <p className="mt-3 text-sm text-emerald-100/65">
-            We will send a one-time password to verify the account before first login.
+            Create an account and start tracking instantly.
           </p>
         </div>
 
@@ -71,14 +69,6 @@ export default function RegisterPage() {
               placeholder="+15551234567"
             />
           </div>
-          <Input
-            id="register-email"
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            leftIcon={<Mail className="h-4 w-4" />}
-          />
           <div className="grid gap-5 md:grid-cols-2">
             <Input
               id="register-password"
@@ -99,7 +89,7 @@ export default function RegisterPage() {
           </div>
           {error ? <p className="text-sm text-rose-200">{error}</p> : null}
           <Button type="submit" className="w-full" isLoading={isRegistering}>
-            Register and send OTP
+            Create account
           </Button>
         </form>
 

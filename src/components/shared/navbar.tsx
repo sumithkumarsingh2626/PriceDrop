@@ -37,7 +37,7 @@ export default function Navbar() {
 
         <div className="hidden rounded-2xl border border-emerald-500/10 bg-emerald-950/30 px-4 py-3 md:block">
           <p className="text-xs uppercase tracking-[0.22em] text-emerald-100/45">Signed in as</p>
-          <p className="mt-1 text-sm font-semibold text-emerald-50">{user?.fullName || user?.email}</p>
+          <p className="mt-1 text-sm font-semibold text-emerald-50">{user?.fullName || user?.phoneNumber}</p>
         </div>
 
         <Button variant="ghost" onClick={() => void logout()}>

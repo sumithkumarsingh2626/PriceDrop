@@ -2,7 +2,6 @@ import { Schema, model, type Document } from 'mongoose';
 import { UserRoles, type UserRoleValue } from '../constants';
 
 export interface IUserNotificationPreferences {
-  email: boolean;
   whatsapp: boolean;
   sms: boolean;
   push: boolean;
@@ -11,14 +10,11 @@ export interface IUserNotificationPreferences {
 export interface IUser extends Document {
   fullName: string;
   email: string;
+  phoneNumber: string;
   passwordHash: string;
-  phoneNumber?: string;
+  notificationsSubscribed: boolean;
   profileImage?: string;
   isVerified: boolean;
-  otpCode?: string;
-  otpExpiresAt?: Date;
-  resetPasswordOtpCode?: string;
-  resetPasswordOtpExpiresAt?: Date;
   notificationPreferences: IUserNotificationPreferences;
   activeRefreshTokenHash?: string;
   role: UserRoleValue;
@@ -28,7 +24,6 @@ export interface IUser extends Document {
 
 const notificationPreferencesSchema = new Schema<IUserNotificationPreferences>(
   {
-    email: { type: Boolean, default: true },
     whatsapp: { type: Boolean, default: false },
     sms: { type: Boolean, default: false },
     push: { type: Boolean, default: false },
@@ -53,14 +48,20 @@ const userSchema = new Schema<IUser>(
       trim: true,
       index: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      index: true,
+    },
     passwordHash: {
       type: String,
       required: true,
     },
-    phoneNumber: {
-      type: String,
-      trim: true,
-      default: undefined,
+    notificationsSubscribed: {
+      type: Boolean,
+      default: true,
     },
     profileImage: {
       type: String,
@@ -69,31 +70,12 @@ const userSchema = new Schema<IUser>(
     },
     isVerified: {
       type: Boolean,
-      default: false,
-      index: true,
-    },
-    otpCode: {
-      type: String,
-      default: undefined,
-    },
-    otpExpiresAt: {
-      type: Date,
-      default: undefined,
-      index: true,
-    },
-    resetPasswordOtpCode: {
-      type: String,
-      default: undefined,
-    },
-    resetPasswordOtpExpiresAt: {
-      type: Date,
-      default: undefined,
+      default: true,
       index: true,
     },
     notificationPreferences: {
       type: notificationPreferencesSchema,
       default: () => ({
-        email: true,
         whatsapp: false,
         sms: false,
         push: false,

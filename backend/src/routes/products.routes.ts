@@ -36,5 +36,6 @@ router.patch(
   ProductsController.updateTracking,
 );
 router.post('/:id/refresh', validate({ params: productIdParamsSchema }), ProductsController.refreshProduct);
+router.delete('/:id', validate({ params: productIdParamsSchema }), ProductsController.deleteProduct);
 
 export default router;

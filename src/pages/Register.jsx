@@ -19,8 +19,13 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!fullName || !email || !password) {
-      setError('Full name, email, and password are required.');
+    if (!fullName || !email || !phoneNumber || !password) {
+      setError('Full name, email, phone number, and password are required.');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email address.');
       return;
     }
 
@@ -39,9 +44,9 @@ export default function Register() {
     try {
       await register({
         fullName,
-        email,
+        email: email.trim().toLowerCase(),
+        phoneNumber: phoneNumber.trim(),
         password,
-        phoneNumber: phoneNumber.trim() || undefined,
       });
     } catch (submissionError) {
       setError(submissionError instanceof Error ? submissionError.message : 'Registration failed.');
@@ -51,7 +56,7 @@ export default function Register() {
   return (
     <PublicLayout
       title="Create your tracker account"
-      subtitle="We send a one-time password to your email. After verification you are signed in automatically."
+      subtitle="Sign up and start tracking price drops instantly."
     >
       <Card className="w-full border-white/10 p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -62,23 +67,28 @@ export default function Register() {
               value={fullName}
               onChange={(event) => setFullName(event.target.value)}
               leftIcon={<User className="h-4 w-4" />}
+              autoComplete="name"
             />
             <Input
-              id="phone-number"
-              label="Phone (optional)"
-              value={phoneNumber}
-              onChange={(event) => setPhoneNumber(event.target.value)}
-              leftIcon={<Phone className="h-4 w-4" />}
-              placeholder="+919876543210"
+              id="email"
+              label="Email address"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              leftIcon={<Mail className="h-4 w-4" />}
+              placeholder="you@example.com"
+              autoComplete="email"
             />
           </div>
           <Input
-            id="register-email"
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            leftIcon={<Mail className="h-4 w-4" />}
+            id="phone-number"
+            label="Phone number (international format)"
+            type="tel"
+            value={phoneNumber}
+            onChange={(event) => setPhoneNumber(event.target.value)}
+            leftIcon={<Phone className="h-4 w-4" />}
+            placeholder="+919876543210"
+            autoComplete="tel"
           />
           <div className="grid gap-5 md:grid-cols-2">
             <Input
@@ -88,6 +98,7 @@ export default function Register() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               leftIcon={<Lock className="h-4 w-4" />}
+              autoComplete="new-password"
             />
             <Input
               id="confirm-password"
@@ -96,11 +107,12 @@ export default function Register() {
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               leftIcon={<Lock className="h-4 w-4" />}
+              autoComplete="new-password"
             />
           </div>
-          {error ? <p className="text-sm text-rose-300">{error}</p> : null}
+          {error ? <p className="text-sm text-rose-300" role="alert">{error}</p> : null}
           <Button type="submit" className="w-full" isLoading={isRegistering}>
-            Register and send OTP
+            Create account
           </Button>
         </form>
 

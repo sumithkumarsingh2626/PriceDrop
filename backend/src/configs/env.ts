@@ -9,7 +9,6 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(5000),
 
   CLIENT_URL: z.string().default('http://localhost:3000'),
-  BREVO_API_KEY: z.string().optional(),
   MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
   REDIS_URL: z.string().default('redis://127.0.0.1:6379'),
   REDIS_ENABLED: z
@@ -20,22 +19,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().optional(),
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
-
-  EMAIL_FROM: z.string().email().optional(),
-  SMTP_HOST: z.string().default('smtp.gmail.com'),
-  SMTP_PORT: z.coerce.number().int().positive().default(587),
-  SMTP_SECURE: z
-    .string()
-    .optional()
-    .transform((value) => value === 'true'),
-  EMAIL_USER: z.string().optional(),
-  EMAIL_PASS: z.string().optional(),
-
-  OTP_LENGTH: z.coerce.number().int().min(4).max(8).default(6),
-  OTP_EXPIRY_MINUTES: z.coerce.number().int().positive().default(10),
-  PASSWORD_RESET_EXPIRY_MINUTES: z.coerce.number().int().positive().default(15),
   BCRYPT_COST_PASSWORD: z.coerce.number().int().min(10).max(14).default(12),
-  BCRYPT_COST_OTP: z.coerce.number().int().min(8).max(12).default(10),
 
   PRICE_TRACKING_CRON: z.string().default('0 0 * * *'),
   PRICE_HISTORY_RETENTION_DAYS: z.coerce.number().int().positive().default(365),
@@ -51,15 +35,21 @@ const envSchema = z.object({
   TWILIO_API_KEY_SECRET: z.string().optional(),
   TWILIO_SMS_FROM: z.string().optional(),
   TWILIO_WHATSAPP_FROM: z.string().optional(),
-  
-  RESEND_API_KEY: z.string().optional(),
+
+  EMAIL_FROM: z.string().default('noreply@pricedrop.com'),
+  SMTP_HOST: z.string().default('smtp.gmail.com'),
+  SMTP_PORT: z.coerce.number().int().default(587),
+  SMTP_SECURE: z.coerce.boolean().default(false),
+  EMAIL_USER: z.string().optional(),
+  EMAIL_PASS: z.string().optional(),
+
+  OTP_EXPIRY_MINUTES: z.coerce.number().int().positive().default(10),
 });
 
 export type Env = z.infer<typeof envSchema> & {
   REDIS_ENABLED: boolean;
   JWT_SECRET: string;
   CLIENT_URLS: string[];
-  BREVO_API_KEY?: string;
 };
 
 export const env: Env = (() => {

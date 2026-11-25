@@ -7,12 +7,12 @@ const features = [
   {
     icon: 'bi-graph-up-arrow',
     title: 'Live price history',
-    copy: 'Every product gets an instant scrape on add, then daily updates with full charts.',
+    copy: 'Every product gets a scrape on add, then automatic daily updates with full price history charts.',
   },
   {
     icon: 'bi-bell-fill',
     title: 'Smart alerts',
-    copy: 'Email OTP onboarding plus target-price and drop notifications you control.',
+    copy: 'Target-price and price-drop notifications you control.',
   },
   {
     icon: 'bi-shield-lock-fill',
@@ -53,7 +53,7 @@ export default function Landing() {
               Never miss a <span className="text-gradient">price drop</span> again.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400">
-              Track products from any e-commerce site, visualize price trends, and get alerted the moment prices hit your target.
+              Track products from Amazon, Flipkart, BestBuy, and Zara. Visualize price trends and get alerted the moment prices hit your target.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link to="/register">
@@ -69,8 +69,8 @@ export default function Landing() {
             </div>
             <div className="mt-10 flex flex-wrap gap-6 text-sm text-slate-500">
               <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Real-time Price Tracking</span>
-              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Instant Price Drop Alerts</span>
-              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Universal E-commerce Support</span>
+              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Daily Price Drop Alerts</span>
+              <span><i className="bi bi-check-circle-fill text-brand-cyan me-2" />Amazon · Flipkart · BestBuy · Zara</span>
             </div>
           </motion.div>
 
@@ -116,10 +116,11 @@ export default function Landing() {
           <div className="mx-auto max-w-3xl glass-card border-white/5 p-8 relative overflow-hidden">
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-brand-violet/10 to-brand-cyan/10 blur-2xl" />
             <div className="relative">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-cyan">Universal Tracking</p>
-              <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">Supports all e-commerce sites</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-cyan">Supported Stores</p>
+              <h2 className="mt-4 text-2xl font-bold text-white md:text-3xl">Track from your favourite stores</h2>
               <p className="mt-4 text-lg text-slate-400">
-                Any product link can be tracked. Simply paste the URL and our tool will automatically add it to your dashboard and monitor for price drops.
+                Currently supported: <strong>Amazon</strong>, <strong>Flipkart</strong>, <strong>BestBuy</strong>, and <strong>Zara</strong>.
+                Paste any product URL from these stores and Price Drop Alert will monitor it daily and notify you when the price drops.
               </p>
             </div>
           </div>

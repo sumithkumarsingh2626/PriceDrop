@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Lock, Mail, Sparkles } from 'lucide-react';
+import { Lock, Phone, Sparkles } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
@@ -10,15 +10,15 @@ import { Card } from '@/components/ui/card';
 
 export default function LoginPage() {
   const { login, isLoggingIn } = useAuth();
-  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ phoneNumber?: string; password?: string }>({});
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const nextErrors: typeof errors = {};
-    if (!email) nextErrors.email = 'Email is required.';
+    if (!phoneNumber) nextErrors.phoneNumber = 'Phone number is required.';
     if (!password) nextErrors.password = 'Password is required.';
     setErrors(nextErrors);
 
@@ -26,7 +26,7 @@ export default function LoginPage() {
       return;
     }
 
-    await login({ email, password });
+    await login({ phoneNumber, password });
   };
 
   return (
@@ -44,13 +44,13 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
-            id="email"
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            leftIcon={<Mail className="h-4 w-4" />}
-            error={errors.email}
+            id="phone-number"
+            label="Phone Number"
+            type="tel"
+            value={phoneNumber}
+            onChange={(event) => setPhoneNumber(event.target.value)}
+            leftIcon={<Phone className="h-4 w-4" />}
+            error={errors.phoneNumber}
           />
           <Input
             id="password"
@@ -66,10 +66,7 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <div className="mt-6 flex items-center justify-between text-sm text-emerald-100/60">
-          <Link href="/forgot-password" className="hover:text-emerald-50">
-            Forgot password?
-          </Link>
+        <div className="mt-6 flex items-center justify-end text-sm text-emerald-100/60">
           <Link href="/register" className="hover:text-emerald-50">
             Create account
           </Link>

@@ -87,7 +87,6 @@ export async function trackProductForUser(userId: string, input: TrackProductInp
   }
 
   const prefs = user.notificationPreferences ?? {
-    email: true,
     whatsapp: false,
     sms: false,
     push: false,
@@ -112,7 +111,6 @@ export async function trackProductForUser(userId: string, input: TrackProductInp
     trackingStatus: TrackingStatuses.ACTIVE,
     notificationEnabled: input.notificationEnabled ?? true,
     notificationSettings: {
-      email: input.notificationSettings?.email ?? prefs.email,
       whatsapp: input.notificationSettings?.whatsapp ?? prefs.whatsapp,
       sms: input.notificationSettings?.sms ?? prefs.sms,
       push: input.notificationSettings?.push ?? prefs.push,
@@ -310,6 +308,13 @@ export async function refreshTrackedProduct(productId: string): Promise<IProduct
   }
 
   return (await Product.findById(product._id)) as IProduct;
+}
+
+export async function deleteProductForUser(userId: string, productId: string): Promise<void> {
+  const product = await getProductForUser(userId, productId);
+  // Cascade: remove all price history for this product
+  await PriceHistory.deleteMany({ productId: product._id });
+  await product.deleteOne();
 }
 
 export async function runDailyTrackingSweep(): Promise<number> {

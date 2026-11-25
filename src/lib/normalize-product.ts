@@ -4,7 +4,6 @@ function normalizeNotificationSettings(raw: unknown): ProductNotificationSetting
   const value = raw as Partial<ProductNotificationSettings> | undefined;
 
   return {
-    email: Boolean(value?.email),
     whatsapp: Boolean(value?.whatsapp),
     sms: Boolean(value?.sms),
     push: Boolean(value?.push),

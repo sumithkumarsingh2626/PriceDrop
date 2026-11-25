@@ -151,7 +151,6 @@ export default function ProductDetail() {
             Save target
           </Button>
           {[
-            ['email', 'Email'],
             ['whatsapp', 'WhatsApp'],
             ['sms', 'SMS'],
             ['push', 'Push'],

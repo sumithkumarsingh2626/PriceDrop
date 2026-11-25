@@ -7,7 +7,6 @@ import {
 } from '../constants';
 
 export interface IProductNotificationSettings {
-  email: boolean;
   whatsapp: boolean;
   sms: boolean;
   push: boolean;
@@ -42,7 +41,6 @@ export interface IProduct extends Document {
 
 const productNotificationSettingsSchema = new Schema<IProductNotificationSettings>(
   {
-    email: { type: Boolean, default: true },
     whatsapp: { type: Boolean, default: false },
     sms: { type: Boolean, default: false },
     push: { type: Boolean, default: false },
@@ -137,7 +135,6 @@ const productSchema = new Schema<IProduct>(
     notificationSettings: {
       type: productNotificationSettingsSchema,
       default: () => ({
-        email: true,
         whatsapp: false,
         sms: false,
         push: false,

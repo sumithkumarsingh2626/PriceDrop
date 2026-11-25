@@ -29,9 +29,9 @@ export default function AdminPage() {
   };
 
   const mockUsers = [
-    { name: 'Sumith Kumar', email: 'sumithkumar2626@gmail.com', role: 'Admin', verified: true, date: '2026-05-01' },
-    { name: 'Bittu Kumar Singh', email: 'bittu.singh@test.com', role: 'User', verified: true, date: '2026-05-10' },
-    { name: 'Alice Smith', email: 'alice.s@test.com', role: 'User', verified: false, date: '2026-05-18' },
+    { name: 'Sumith Kumar', phone: '+1234567890', role: 'Admin', verified: true, date: '2026-05-01' },
+    { name: 'Bittu Kumar Singh', phone: '+1987654321', role: 'User', verified: true, date: '2026-05-10' },
+    { name: 'Alice Smith', phone: '+1122334455', role: 'User', verified: false, date: '2026-05-18' },
   ];
 
   const mockJobs = [
@@ -113,7 +113,7 @@ export default function AdminPage() {
                 <thead>
                   <tr className="border-b border-slate-900 pb-3 text-slate-500 font-bold uppercase tracking-wider">
                     <th className="py-2.5">User</th>
-                    <th className="py-2.5">Email</th>
+                    <th className="py-2.5">Phone</th>
                     <th className="py-2.5">Access Role</th>
                     <th className="py-2.5 text-right">Status</th>
                   </tr>
@@ -122,7 +122,7 @@ export default function AdminPage() {
                   {mockUsers.map((u, idx) => (
                     <tr key={idx} className="hover:bg-slate-900/10 transition">
                       <td className="py-3 font-bold text-slate-200">{u.name}</td>
-                      <td className="py-3 text-slate-400 font-mono">{u.email}</td>
+                      <td className="py-3 text-slate-400 font-mono">{u.phone}</td>
                       <td className="py-3">
                         <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${u.role === 'Admin' ? 'bg-sky-500/10 text-sky-400 border border-sky-500/20' : 'bg-slate-900 text-slate-400 border border-slate-800'}`}>
                           {u.role}

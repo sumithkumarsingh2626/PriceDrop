@@ -26,11 +26,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-emerald-500/10 bg-emerald-950/20 p-4">
-              <p className="text-sm text-emerald-100/60">Email</p>
-              <p className="mt-2 text-lg font-medium text-emerald-50">{user?.email}</p>
-            </div>
+          <div className="grid gap-4 md:grid-cols-1">
             <div className="rounded-2xl border border-emerald-500/10 bg-emerald-950/20 p-4">
               <p className="text-sm text-emerald-100/60">Phone</p>
               <p className="mt-2 text-lg font-medium text-emerald-50">
@@ -54,7 +50,6 @@ export default function SettingsPage() {
           <div className="space-y-3">
             {(
               [
-                ['Email', user?.notificationPreferences.email],
                 ['WhatsApp', user?.notificationPreferences.whatsapp],
                 ['SMS', user?.notificationPreferences.sms],
                 ['Push', user?.notificationPreferences.push],

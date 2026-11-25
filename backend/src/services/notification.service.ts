@@ -9,7 +9,6 @@ import {
 import { Notification } from '../models/notification.model';
 import { Product, type IProduct } from '../models/product.model';
 import { User, type IUser } from '../models/user.model';
-import { sendPriceDropEmail } from './email.service';
 import { notificationQueue, queueNotificationDelivery } from '../queues';
 import { logger } from '../utils/logger';
 
@@ -52,7 +51,6 @@ function getEnabledChannels(user: IUser, product: IProduct): NotificationChannel
 
   const channels: NotificationChannel[] = [];
 
-  if (settings.email && preferences.email) channels.push(NotificationChannels.EMAIL);
   if (settings.sms && preferences.sms) channels.push(NotificationChannels.SMS);
   if (settings.whatsapp && preferences.whatsapp) channels.push(NotificationChannels.WHATSAPP);
   if (settings.push && preferences.push) channels.push(NotificationChannels.PUSH);
@@ -148,23 +146,7 @@ export async function deliverNotification(notificationId: string): Promise<void>
   }
 
   try {
-    if (notification.channel === NotificationChannels.EMAIL) {
-      if (!user.email) {
-        throw new Error('User email not available');
-      }
-
-      await sendPriceDropEmail({
-        to: user.email,
-        title: product.title,
-        storeName: product.storeName,
-        productUrl: product.productUrl,
-        image: product.productImage,
-        oldPrice: notification.metadata?.oldPrice ?? product.currentPrice,
-        newPrice: notification.metadata?.newPrice ?? product.currentPrice,
-        percentageDrop: notification.metadata?.percentageDrop ?? Math.abs(product.lastPriceChange ?? 0),
-        currency: notification.metadata?.currency ?? product.currency,
-      });
-    } else if (notification.channel === NotificationChannels.SMS) {
+    if (notification.channel === NotificationChannels.SMS) {
       if (!user.phoneNumber) {
         throw new Error('User phone number not available');
       }
@@ -177,7 +159,7 @@ export async function deliverNotification(notificationId: string): Promise<void>
 
       await sendWhatsapp(user.phoneNumber, notification.messageBody);
     } else if (notification.channel === NotificationChannels.PUSH) {
-      logger.info(`Push notification queued for ${user.email}: ${notification.messageBody}`);
+      logger.info(`Push notification queued for user ${String(user._id)}: ${notification.messageBody}`);
     }
 
     notification.status = NotificationStatuses.SENT;

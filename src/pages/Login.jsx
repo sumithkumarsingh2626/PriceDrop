@@ -17,7 +17,7 @@ export default function Login() {
     event.preventDefault();
 
     const nextErrors = {};
-    if (!email) nextErrors.email = 'Email is required.';
+    if (!email) nextErrors.email = 'Email address is required.';
     if (!password) nextErrors.password = 'Password is required.';
     setErrors(nextErrors);
 
@@ -25,7 +25,7 @@ export default function Login() {
       return;
     }
 
-    await login({ email, password });
+    await login({ email: email.trim().toLowerCase(), password });
   };
 
   return (
@@ -37,11 +37,13 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             id="email"
-            label="Email"
+            label="Email address"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             leftIcon={<Mail className="h-4 w-4" />}
+            placeholder="you@example.com"
+            autoComplete="email"
             error={errors.email}
           />
           <Input
@@ -51,6 +53,7 @@ export default function Login() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             leftIcon={<Lock className="h-4 w-4" />}
+            autoComplete="current-password"
             error={errors.password}
           />
           <Button type="submit" className="w-full" isLoading={isLoggingIn}>
@@ -58,10 +61,7 @@ export default function Login() {
           </Button>
         </form>
 
-        <div className="mt-6 flex items-center justify-between text-sm text-slate-400">
-          <Link to="/forgot-password" className="hover:text-brand-cyan">
-            Forgot password?
-          </Link>
+        <div className="mt-6 flex items-center justify-end text-sm text-slate-400">
           <Link to="/register" className="hover:text-brand-purple">
             Create account
           </Link>

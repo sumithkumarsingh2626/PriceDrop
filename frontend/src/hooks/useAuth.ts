@@ -12,6 +12,11 @@ interface AuthBundle {
   user: Record<string, unknown>;
 }
 
+interface OtpResponse {
+  otpRequired: boolean;
+  email: string;
+}
+
 export function useAuth() {
   const router = useRouter();
   const { success, error } = useToast();
@@ -26,18 +31,10 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: async (payload: { email: string; password: string }) => {
       const response = await api.post('/auth/login', payload);
-      return getEnvelopeData<AuthBundle>(response, 'Login failed');
+      return getEnvelopeData<OtpResponse>(response, 'Login failed');
     },
-    onSuccess: (bundle) => {
-      const mapped = mapApiUser(bundle.user);
-      if (!mapped) {
-        error('Invalid account payload received from the server.');
-        return;
-      }
-
-      setAuthSession(mapped, bundle.accessToken, bundle.refreshToken);
-      success(`Welcome back, ${mapped.fullName || mapped.email}.`);
-      router.push('/dashboard');
+    onSuccess: () => {
+      success('OTP sent to your email.');
     },
     onError: (mutationError: Error) => error(mutationError.message),
   });
@@ -46,21 +43,21 @@ export function useAuth() {
     mutationFn: async (payload: {
       fullName: string;
       email: string;
+      phoneNumber: string;
       password: string;
-      phoneNumber?: string;
+      notificationsSubscribed: boolean;
     }) => {
       const response = await api.post('/auth/register', payload);
-      return getEnvelopeData<{ email: string }>(response, 'Registration failed');
+      return getEnvelopeData<OtpResponse>(response, 'Registration failed');
     },
-    onSuccess: (bundle) => {
-      success('Your account was created. Enter the OTP from your email to activate it.');
-      router.push(`/verify-otp?email=${encodeURIComponent(bundle.email)}`);
+    onSuccess: () => {
+      success('Account created. Check your email for OTP.');
     },
     onError: (mutationError: Error) => error(mutationError.message),
   });
 
   const verifyOtpMutation = useMutation({
-    mutationFn: async (payload: { email: string; otp: string }) => {
+    mutationFn: async (payload: { email: string; otp: string; type: 'REGISTER' | 'LOGIN' }) => {
       const response = await api.post('/auth/verify-otp', payload);
       return getEnvelopeData<AuthBundle>(response, 'OTP verification failed');
     },
@@ -72,44 +69,8 @@ export function useAuth() {
       }
 
       setAuthSession(mapped, bundle.accessToken, bundle.refreshToken);
-      success('Email verified. Your dashboard is ready.');
+      success(`Welcome, ${mapped.fullName || mapped.email}.`);
       router.push('/dashboard');
-    },
-    onError: (mutationError: Error) => error(mutationError.message),
-  });
-
-  const resendOtpMutation = useMutation({
-    mutationFn: async (payload: { email: string }) => {
-      const response = await api.post('/auth/resend-otp', payload);
-      return getEnvelopeData<{ email: string }>(response, 'Failed to resend OTP');
-    },
-    onSuccess: () => success('A fresh OTP is on its way to your inbox.'),
-    onError: (mutationError: Error) => error(mutationError.message),
-  });
-
-  const forgotPasswordMutation = useMutation({
-    mutationFn: async (email: string) => {
-      const response = await api.post('/auth/forgot-password', { email });
-      return getEnvelopeData<{ email?: string }>(response, 'Unable to request password reset');
-    },
-    onSuccess: (_bundle, email) => {
-      success('If that email exists, a reset OTP has been sent.');
-      router.push(`/verify-otp?email=${encodeURIComponent(email)}&mode=reset`);
-    },
-    onError: (mutationError: Error) => error(mutationError.message),
-  });
-
-  const resetPasswordMutation = useMutation({
-    mutationFn: async (payload: {
-      email: string;
-      otp: string;
-      newPassword: string;
-    }) => {
-      await api.post('/auth/reset-password', payload);
-    },
-    onSuccess: () => {
-      success('Password updated. You can sign in now.');
-      router.push('/login');
     },
     onError: (mutationError: Error) => error(mutationError.message),
   });
@@ -134,12 +95,6 @@ export function useAuth() {
     isRegistering: registerMutation.isPending,
     verifyOtp: verifyOtpMutation.mutateAsync,
     isVerifying: verifyOtpMutation.isPending,
-    resendOtp: resendOtpMutation.mutateAsync,
-    isResendingOtp: resendOtpMutation.isPending,
-    forgotPassword: forgotPasswordMutation.mutateAsync,
-    isRequestingReset: forgotPasswordMutation.isPending,
-    resetPassword: resetPasswordMutation.mutateAsync,
-    isResetting: resetPasswordMutation.isPending,
     logout,
     user,
     accessToken,

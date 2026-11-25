@@ -60,13 +60,13 @@ export class NotificationEngine {
           userId: product.userId,
           productId: product._id,
           notificationType: notif.type,
-          channel: NotificationChannels.EMAIL, // Defaulting to email
+          channel: NotificationChannels.PUSH,
           messageBody: notif.message,
           metadata: { currency: product.currency, newPrice: product.currentPrice }
         });
         logger.info(`Smart notification generated for product ${product._id}: ${notif.type}`);
         
-        // Note: The actual dispatching (email, whatsapp, push) would be handled by a queue worker 
+        // Note: The actual dispatching (whatsapp, push, sms) would be handled by a queue worker 
         // that listens to newly created PENDING notifications.
       } catch (error) {
         logger.error(`Error creating smart notification for product ${product._id}:`, error);

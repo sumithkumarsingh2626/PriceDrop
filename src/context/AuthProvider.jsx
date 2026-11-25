@@ -6,7 +6,7 @@ import { mapApiUser } from '@/lib/map-user';
 import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/context/ToastProvider';
 
-const PUBLIC_PREFIXES = ['/login', '/register', '/forgot-password', '/verify-otp'];
+const PUBLIC_PREFIXES = ['/login', '/register'];
 
 function isPublicPath(pathname) {
   if (pathname === '/') return true;
@@ -89,7 +89,7 @@ export default function AuthProvider({ children }) {
     const pub = isPublicPath(pathname);
 
     if (!authed && !pub) navigate('/login', { replace: true });
-    if (authed && ['/login', '/register', '/forgot-password'].includes(pathname)) {
+    if (authed && ['/login', '/register'].includes(pathname)) {
       navigate('/dashboard', { replace: true });
     }
   }, [pathname, navigate, isBootstrapped]);

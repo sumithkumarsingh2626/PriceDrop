@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Bell, Globe, MessageCircle, Send, Smartphone, Target } from 'lucide-react';
+import { Bell, Globe, Target } from 'lucide-react';
 import { useProducts } from '@/hooks/useProducts';
 import { useToast } from '@/context/ToastProvider';
 import { useTrackingStore } from '@/store/trackingStore';
@@ -37,7 +37,6 @@ export default function AddProductForm() {
   const [variant, setVariant] = useState('');
   const [formError, setFormError] = useState('');
   const [settings, setSettings] = useState({
-    email: true,
     whatsapp: false,
     sms: false,
     push: false,
@@ -127,7 +126,6 @@ export default function AddProductForm() {
           <h4 className="mt-2 text-lg font-semibold text-emerald-50">Alert this product separately</h4>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
-          <NotificationToggle label="Email notification" checked={settings.email} onChange={(email) => setSettings((prev) => ({ ...prev, email }))} />
           <NotificationToggle label="WhatsApp notification" checked={settings.whatsapp} onChange={(whatsapp) => setSettings((prev) => ({ ...prev, whatsapp }))} />
           <NotificationToggle label="SMS notification" checked={settings.sms} onChange={(sms) => setSettings((prev) => ({ ...prev, sms }))} />
           <NotificationToggle label="Push notification" checked={settings.push} onChange={(push) => setSettings((prev) => ({ ...prev, push }))} />
