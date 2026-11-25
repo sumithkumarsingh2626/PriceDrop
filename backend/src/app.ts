@@ -62,11 +62,16 @@ function resolveCorsOrigin(): cors.CorsOptions['origin'] {
     return true;
   }
 
-  if (env.CLIENT_URLS.length === 0) {
-    return true;
-  }
+  // Merge configured origins with standard localhost and deployment domains
+  const allowedOrigins = [
+    ...env.CLIENT_URLS,
+    'http://localhost:*',
+    'http://127.0.0.1:*',
+    'https://price-drop-one.vercel.app',
+    'https://*.vercel.app',
+  ];
 
-  const isOriginAllowed = buildOriginAllowlistChecker(env.CLIENT_URLS);
+  const isOriginAllowed = buildOriginAllowlistChecker(allowedOrigins);
 
   return (origin, callback) => {
     if (!origin || isOriginAllowed(origin)) {
