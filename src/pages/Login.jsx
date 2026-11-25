@@ -33,7 +33,7 @@ export default function Login() {
       title="Welcome back"
       subtitle="Sign in to continue monitoring your tracked products."
     >
-      <Card className="w-full border-white/10 p-8">
+      <Card hoverGlow isometric className="w-full p-8 shadow-2xl">
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             id="email"

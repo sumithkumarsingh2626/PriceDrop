@@ -32,29 +32,37 @@ export default function Products() {
   }, [products, searchQuery, statusFilter]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.24em] text-emerald-200/60">Tracked products</p>
-          <h1 className="mt-2 text-4xl font-semibold">Manage your saved watches</h1>
+          <span className="glass-pill border-brand-violet/30 text-brand-purple">
+            Portfolio Watches
+          </span>
+          <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
+            Tracked <span className="text-gradient">Products</span>
+          </h1>
+          <p className="mt-1 text-sm text-slate-400">
+            Real-time status and price monitoring for all saved e-commerce products.
+          </p>
         </div>
 
-        {/* Filter tabs */}
+        {/* 3D Glassmorphic Filter Tabs */}
         <div
           role="group"
           aria-label="Filter products by status"
-          className="flex gap-2 rounded-2xl border border-emerald-500/10 bg-emerald-950/30 p-1"
+          className="flex gap-1.5 rounded-2xl border border-white/10 bg-white/[0.04] p-1.5 backdrop-blur-2xl shadow-glass"
         >
           {FILTERS.map((filter) => (
             <button
               key={filter}
               onClick={() => setStatusFilter(filter)}
               aria-pressed={statusFilter === filter}
-              className={`rounded-2xl px-4 py-2 text-sm capitalize transition
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950
-                ${statusFilter === filter
-                  ? 'bg-emerald-400 text-emerald-950 font-semibold'
-                  : 'text-emerald-100/70 hover:text-emerald-100 hover:bg-emerald-500/10'
+              className={`rounded-xl px-4 py-2 text-xs font-bold capitalize transition-all duration-200
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan
+                ${
+                  statusFilter === filter
+                    ? 'bg-gradient-to-r from-brand-violet to-brand-purple text-white shadow-glow'
+                    : 'text-slate-400 hover:bg-white/[0.08] hover:text-white'
                 }`}
             >
               {filter}
@@ -71,24 +79,24 @@ export default function Products() {
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
-        /* Empty state */
-        <div className="flex flex-col items-center justify-center gap-5 rounded-3xl border border-emerald-500/10 bg-emerald-950/20 py-20 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-emerald-400/20 bg-emerald-950/40">
-            <PackageSearch className="h-8 w-8 text-emerald-400/60" />
+        /* Glassmorphic Empty state */
+        <div className="glass-card-iso flex flex-col items-center justify-center gap-5 py-20 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.05] shadow-inner">
+            <PackageSearch className="h-8 w-8 text-brand-cyan" />
           </div>
           <div>
-            <p className="text-xl font-semibold text-emerald-50">
+            <p className="font-display text-xl font-bold text-white">
               {products.length === 0 ? 'No products tracked yet' : 'No products match your filters'}
             </p>
-            <p className="mt-2 max-w-xs text-sm text-emerald-200/50">
+            <p className="mt-2 max-w-sm text-sm text-slate-400">
               {products.length === 0
-                ? 'Use the search bar above to add a product URL and start tracking its price.'
-                : 'Try changing the status filter or clearing your search query.'}
+                ? 'Click "Track" in the top bar to paste a product URL from Amazon, Flipkart, BestBuy, or Zara.'
+                : 'Try toggling the status filter or clearing your search keywords.'}
             </p>
           </div>
         </div>
       ) : (
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           {filteredProducts.map((product) => (
             <TrackedProductCard
               key={product._id}

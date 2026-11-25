@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Bell, Globe, Target } from 'lucide-react';
+import { Bell, Globe, Sparkles, Target } from 'lucide-react';
 import { useProducts } from '@/hooks/useProducts';
 import { useToast } from '@/context/ToastProvider';
 import { useTrackingStore } from '@/store/trackingStore';
@@ -16,13 +16,13 @@ function NotificationToggle({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex items-center justify-between rounded-2xl border border-emerald-500/10 bg-emerald-950/20 px-4 py-3 text-sm text-emerald-50/85">
-      <span>{label}</span>
+    <label className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-xs text-slate-200 backdrop-blur-md transition-colors hover:border-white/20 cursor-pointer">
+      <span className="font-medium">{label}</span>
       <input
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}
-        className="h-4 w-4 rounded border-emerald-400/20 bg-transparent accent-emerald-400"
+        className="h-4 w-4 rounded border-white/20 bg-slate-900 accent-brand-cyan cursor-pointer"
       />
     </label>
   );
@@ -37,9 +37,9 @@ export default function AddProductForm() {
   const [variant, setVariant] = useState('');
   const [formError, setFormError] = useState('');
   const [settings, setSettings] = useState({
-    whatsapp: false,
-    sms: false,
-    push: false,
+    whatsapp: true,
+    sms: true,
+    push: true,
     anyPriceDrop: true,
     targetPriceAlert: true,
   });
@@ -48,9 +48,9 @@ export default function AddProductForm() {
     if (!url) return 'Supported stores: Amazon, Flipkart, BestBuy, Zara';
     try {
       const host = new URL(url).hostname.replace(/^www\./, '');
-      return `Detected host: ${host}`;
+      return `Detected store host: ${host}`;
     } catch {
-      return 'Enter a full product URL';
+      return 'Enter a complete product URL starting with http:// or https://';
     }
   }, [url]);
 
@@ -73,7 +73,7 @@ export default function AddProductForm() {
         notificationSettings: settings,
       });
 
-      success('Product added and first scrape completed.');
+      success('Product added and initial scrape completed.');
       setUrl('');
       setTargetPrice('');
       setVariant('');
@@ -85,56 +85,61 @@ export default function AddProductForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <div className="rounded-3xl border border-emerald-500/10 bg-emerald-950/20 p-4 text-sm text-emerald-100/65">
-        Paste a product page and we will scrape the title, current price, image, availability, and store before saving the first history point.
+      <div className="flex items-center gap-3 rounded-2xl border border-brand-cyan/20 bg-brand-cyan/10 p-3.5 text-xs text-slate-300 backdrop-blur-md">
+        <Sparkles className="h-5 w-5 shrink-0 text-brand-cyan" />
+        <p>Paste any product URL. The intelligence engine extracts price, title, image, and currency automatically.</p>
       </div>
 
-      <Input
-        id="product-url"
-        label="Product URL"
-        value={url}
-        onChange={(event) => setUrl(event.target.value)}
-        placeholder="https://www.amazon.com/... or https://www.bestbuy.com/..."
-        leftIcon={<Globe className="h-4 w-4" />}
-        error={formError || undefined}
-      />
-      <p className="text-xs text-emerald-100/45">{urlHint}</p>
+      <div className="space-y-1.5">
+        <Input
+          id="product-url"
+          label="Product URL"
+          value={url}
+          onChange={(event) => setUrl(event.target.value)}
+          placeholder="https://www.amazon.in/... or https://www.flipkart.com/..."
+          leftIcon={<Globe className="h-4 w-4" />}
+          error={formError || undefined}
+        />
+        <p className="text-[11px] font-medium text-slate-500 pl-1">{urlHint}</p>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Input
           id="target-price"
-          label="Target price"
+          label="Target Alert Price"
           type="number"
           min="0"
           value={targetPrice}
           onChange={(event) => setTargetPrice(event.target.value)}
-          placeholder="Optional"
+          placeholder="e.g. 299"
           leftIcon={<Target className="h-4 w-4" />}
         />
         <Input
           id="variant"
-          label="Variant"
+          label="Variant (Optional)"
           value={variant}
           onChange={(event) => setVariant(event.target.value)}
-          placeholder="Color, size, storage..."
+          placeholder="Color, size, or edition"
         />
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 pt-1">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-emerald-200/60">Notification channels</p>
-          <h4 className="mt-2 text-lg font-semibold text-emerald-50">Alert this product separately</h4>
+          <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-brand-purple">
+            Dispatch Channels
+          </span>
+          <h4 className="text-sm font-bold text-white mt-0.5">Notification Triggers</h4>
         </div>
-        <div className="grid gap-3 md:grid-cols-2">
-          <NotificationToggle label="WhatsApp notification" checked={settings.whatsapp} onChange={(whatsapp) => setSettings((prev) => ({ ...prev, whatsapp }))} />
-          <NotificationToggle label="SMS notification" checked={settings.sms} onChange={(sms) => setSettings((prev) => ({ ...prev, sms }))} />
-          <NotificationToggle label="Push notification" checked={settings.push} onChange={(push) => setSettings((prev) => ({ ...prev, push }))} />
-          <NotificationToggle label="Any price drop" checked={settings.anyPriceDrop} onChange={(anyPriceDrop) => setSettings((prev) => ({ ...prev, anyPriceDrop }))} />
-          <NotificationToggle label="Target price reached" checked={settings.targetPriceAlert} onChange={(targetPriceAlert) => setSettings((prev) => ({ ...prev, targetPriceAlert }))} />
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          <NotificationToggle label="WhatsApp Notification" checked={settings.whatsapp} onChange={(whatsapp) => setSettings((prev) => ({ ...prev, whatsapp }))} />
+          <NotificationToggle label="SMS Text Notification" checked={settings.sms} onChange={(sms) => setSettings((prev) => ({ ...prev, sms }))} />
+          <NotificationToggle label="In-App Push Alerts" checked={settings.push} onChange={(push) => setSettings((prev) => ({ ...prev, push }))} />
+          <NotificationToggle label="Alert on Any Drop" checked={settings.anyPriceDrop} onChange={(anyPriceDrop) => setSettings((prev) => ({ ...prev, anyPriceDrop }))} />
+          <NotificationToggle label="Target Price Met" checked={settings.targetPriceAlert} onChange={(targetPriceAlert) => setSettings((prev) => ({ ...prev, targetPriceAlert }))} />
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-end gap-3">
+      <div className="flex flex-wrap justify-end gap-3 pt-3 border-t border-white/[0.06]">
         <Button variant="ghost" onClick={() => setAddProductOpen(false)}>
           Cancel
         </Button>
@@ -143,7 +148,7 @@ export default function AddProductForm() {
           isLoading={isTracking}
           leftIcon={<Bell className="h-4 w-4" />}
         >
-          Start tracking
+          Track Product
         </Button>
       </div>
     </form>

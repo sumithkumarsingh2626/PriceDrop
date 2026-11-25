@@ -1,8 +1,16 @@
 import { cn } from '@/lib/utils';
 
-export function Card({ className, children, ...props }) {
+export function Card({ className, children, hoverGlow, isometric, ...props }) {
   return (
-    <div className={cn('glass-card p-6', className)} {...props}>
+    <div
+      className={cn(
+        isometric || hoverGlow ? 'glass-card-iso p-6' : 'glass-card p-6',
+        className,
+      )}
+      {...props}
+    >
+      {/* Specular top reflection line */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
       {children}
     </div>
   );

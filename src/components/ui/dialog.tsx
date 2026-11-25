@@ -54,16 +54,21 @@ export default function Dialog({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15, transition: { duration: 0.15 } }}
             className={cn(
-              "relative z-10 w-full max-w-lg rounded-2xl border border-slate-800/80 bg-slate-950 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl overflow-hidden",
-              "before:absolute before:inset-0 before:bg-[linear-gradient(130deg,rgba(255,255,255,0.03),transparent)] before:pointer-events-none",
+              "relative z-10 w-full max-w-lg rounded-3xl border border-white/15 bg-slate-950/85 p-7 shadow-2xl backdrop-blur-2xl overflow-hidden",
               className
             )}
-            style={{ boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.05), 0 20px 50px rgba(0,0,0,0.5)' }}
+            style={{
+              boxShadow: '0 25px 60px -10px rgba(0,0,0,0.8), inset 0 1px 1px 0 rgba(255,255,255,0.25), 0 0 30px rgba(124,58,237,0.15)',
+            }}
           >
+            {/* Top specular reflection bar */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+            <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-cyan/10 blur-2xl" />
+
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute right-4.5 top-4.5 rounded-lg p-1 text-slate-500 hover:bg-slate-900 hover:text-slate-200 transition duration-150"
+              className="absolute right-5 top-5 rounded-xl border border-white/10 bg-white/[0.05] p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition duration-150 backdrop-blur-md"
             >
               <X className="h-5 w-5" />
             </button>

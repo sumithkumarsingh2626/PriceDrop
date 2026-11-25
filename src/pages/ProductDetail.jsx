@@ -89,36 +89,41 @@ export default function ProductDetail() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card>
-          <p className="text-xs uppercase tracking-widest text-slate-500">Current</p>
-          <h3 className="mt-2 text-2xl font-bold">{formatCurrency(analytics.currentPrice, product.currency)}</h3>
+        <Card hoverGlow isometric className="p-6">
+          <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-slate-400">Current Price</span>
+          <h3 className="mt-2 font-display text-2xl font-extrabold text-white">{formatCurrency(analytics.currentPrice, product.currency)}</h3>
         </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-widest text-slate-500">Lowest</p>
-          <h3 className="mt-2 text-2xl font-bold text-brand-cyan">{formatCurrency(analytics.lowestPrice, product.currency)}</h3>
+        <Card hoverGlow isometric className="p-6">
+          <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-brand-cyan">Lowest Recorded</span>
+          <h3 className="mt-2 font-display text-2xl font-extrabold text-brand-cyan">{formatCurrency(analytics.lowestPrice, product.currency)}</h3>
         </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-widest text-slate-500">Highest</p>
-          <h3 className="mt-2 text-2xl font-bold">{formatCurrency(analytics.highestPrice, product.currency)}</h3>
+        <Card hoverGlow isometric className="p-6">
+          <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-slate-400">Highest Recorded</span>
+          <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-300">{formatCurrency(analytics.highestPrice, product.currency)}</h3>
         </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-widest text-slate-500">Since first scrape</p>
-          <h3 className="mt-2 text-2xl font-bold">{percentLabel(analytics.percentageDifference)}</h3>
+        <Card hoverGlow isometric className="p-6">
+          <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-400">Net Delta</span>
+          <h3 className="mt-2 font-display text-2xl font-extrabold text-emerald-400">{percentLabel(analytics.percentageDifference)}</h3>
         </Card>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
-        <Card className="space-y-5">
+        <Card hoverGlow isometric className="space-y-5 p-7">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-xl font-bold">Price history</h2>
-            <div className="flex gap-1 rounded-xl border border-white/10 bg-slate-900/50 p-1">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-brand-cyan">Price Trajectory</span>
+              <h2 className="mt-0.5 text-xl font-bold text-white">Interactive History</h2>
+            </div>
+            <div className="flex gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1.5 backdrop-blur-2xl shadow-glass">
               {['7d', '1m', '3m', 'max'].map((value) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => setRange(value)}
-                  className={`rounded-lg px-3 py-1.5 text-sm ${
-                    range === value ? 'bg-brand-violet text-white' : 'text-slate-400'
+                  className={`rounded-xl px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                    range === value
+                      ? 'bg-gradient-to-r from-brand-violet to-brand-purple text-white shadow-glow'
+                      : 'text-slate-400 hover:bg-white/[0.08] hover:text-white'
                   }`}
                 >
                   {value}
@@ -129,52 +134,62 @@ export default function ProductDetail() {
           <PriceHistoryChart history={history} currency={product.currency} />
         </Card>
 
-        <Card className="space-y-4">
-          <h2 className="text-xl font-bold">Alerts & target</h2>
-          <Input
-            id="detail-target-price"
-            label="Target price"
-            type="number"
-            min="0"
-            value={targetPrice}
-            onChange={(e) => setTargetPrice(e.target.value)}
-            placeholder={product.targetPrice ? String(product.targetPrice) : 'Set target'}
-          />
-          <Button
-            onClick={() =>
-              void updateTracking({
-                id: product._id,
-                targetPrice: targetPrice ? Number(targetPrice) : null,
-              })
-            }
-          >
-            Save target
-          </Button>
-          {[
-            ['whatsapp', 'WhatsApp'],
-            ['sms', 'SMS'],
-            ['push', 'Push'],
-            ['anyPriceDrop', 'Any drop'],
-            ['targetPriceAlert', 'Target hit'],
-          ].map(([key, label]) => (
-            <label
-              key={key}
-              className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3 text-sm"
+        <Card hoverGlow isometric className="space-y-5 p-7">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-brand-purple">Alert Thresholds</span>
+            <h2 className="mt-0.5 text-xl font-bold text-white">Target & Channels</h2>
+          </div>
+
+          <div className="space-y-3">
+            <Input
+              id="detail-target-price"
+              label="Target Price Alert ($)"
+              type="number"
+              min="0"
+              value={targetPrice}
+              onChange={(e) => setTargetPrice(e.target.value)}
+              placeholder={product.targetPrice ? String(product.targetPrice) : 'Set target price'}
+            />
+            <Button
+              className="w-full"
+              onClick={() =>
+                void updateTracking({
+                  id: product._id,
+                  targetPrice: targetPrice ? Number(targetPrice) : null,
+                })
+              }
             >
-              <span>{label}</span>
-              <input
-                type="checkbox"
-                checked={product.notificationSettings[key]}
-                onChange={(e) =>
-                  void updateNotifications({
-                    id: product._id,
-                    notificationSettings: { [key]: e.target.checked },
-                  })
-                }
-                className="h-4 w-4 accent-brand-violet"
-              />
-            </label>
-          ))}
+              Update Target
+            </Button>
+          </div>
+
+          <div className="space-y-2 pt-2 border-t border-white/[0.06]">
+            {[
+              ['whatsapp', 'WhatsApp Notification'],
+              ['sms', 'SMS Text Alert'],
+              ['push', 'Browser Push Notification'],
+              ['anyPriceDrop', 'Alert on Any Price Drop'],
+              ['targetPriceAlert', 'Alert when Target Hit'],
+            ].map(([key, label]) => (
+              <label
+                key={key}
+                className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-xs text-slate-300 backdrop-blur-md cursor-pointer hover:border-white/20 transition-colors"
+              >
+                <span className="font-medium">{label}</span>
+                <input
+                  type="checkbox"
+                  checked={product.notificationSettings[key]}
+                  onChange={(e) =>
+                    void updateNotifications({
+                      id: product._id,
+                      notificationSettings: { [key]: e.target.checked },
+                    })
+                  }
+                  className="h-4 w-4 rounded accent-brand-cyan"
+                />
+              </label>
+            ))}
+          </div>
         </Card>
       </div>
 

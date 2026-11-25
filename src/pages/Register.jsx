@@ -58,7 +58,7 @@ export default function Register() {
       title="Create your tracker account"
       subtitle="Sign up and start tracking price drops instantly."
     >
-      <Card className="w-full border-white/10 p-8">
+      <Card hoverGlow isometric className="w-full p-8 shadow-2xl">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid gap-5 md:grid-cols-2">
             <Input

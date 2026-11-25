@@ -3,12 +3,15 @@ import { cn } from '@/lib/utils';
 
 const variants = {
   primary:
-    'bg-gradient-to-r from-brand-violet to-brand-purple text-white shadow-glow border border-brand-violet/40 hover:brightness-110',
-  secondary: 'bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700',
+    'bg-gradient-to-r from-brand-violet to-brand-purple text-white shadow-glow border border-white/20 hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-5px_rgba(124,58,237,0.6)] active:translate-y-0',
+  secondary:
+    'bg-white/[0.07] text-slate-100 border border-white/12 backdrop-blur-xl hover:bg-white/[0.12] hover:border-white/25 hover:-translate-y-0.5 active:translate-y-0',
   outline:
-    'bg-transparent border border-white/15 text-slate-200 hover:border-brand-cyan/40 hover:bg-white/5',
-  danger: 'bg-rose-600/90 text-white border border-rose-500/40',
-  ghost: 'text-slate-400 hover:bg-white/5 hover:text-white border border-transparent',
+    'bg-white/[0.03] border border-white/15 text-slate-200 backdrop-blur-xl hover:border-brand-cyan/50 hover:bg-brand-cyan/10 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
+  danger:
+    'bg-rose-600/80 text-white border border-rose-400/30 backdrop-blur-xl hover:bg-rose-600 hover:-translate-y-0.5',
+  ghost:
+    'text-slate-400 hover:bg-white/5 hover:text-white border border-transparent',
 };
 
 const sizes = {
