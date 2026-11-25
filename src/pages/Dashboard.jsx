@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import {
   ArrowDown,
   Bell,
+  Cloud,
   DollarSign,
   LineChart,
   PackageSearch,
@@ -55,48 +56,48 @@ export default function Dashboard() {
       {/* Header section with telemetry badge */}
       <div className="flex flex-col gap-1.5">
         <div className="inline-flex items-center gap-2">
-          <span className="glass-pill border-[#00f5a0]/30 bg-[#00f5a0]/5 text-[#00f5a0] font-mono text-[10px]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#00f5a0] animate-pulse" />
-            TELEMETRY NODE ACTIVE
+          <span className="glass-pill border-[#00D4FF]/30 bg-[#00D4FF]/10 text-[#00D4FF] font-mono text-[10px]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#00D4FF] animate-pulse" />
+            AI CLOUD NODE ONLINE
           </span>
         </div>
         <h1 className="font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
-          Retail Intelligence <span className="text-gradient">Console</span>
+          Cloud Telemetry <span className="text-gradient">Console</span>
         </h1>
-        <p className="max-w-3xl text-sm leading-relaxed text-slate-400">
-          Continuous price monitoring across Amazon, Flipkart, BestBuy, and Zara with automated daily sweeps.
+        <p className="max-w-3xl text-sm leading-relaxed text-[#94A3B8]">
+          Automated retail scraping clusters actively monitoring Amazon, Flipkart, BestBuy, and Zara for price drops.
         </p>
       </div>
 
-      {/* 3D Realistic Stat Cards Grid */}
+      {/* 3D Stat Cards Grid */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Tracked Products"
           value={String(totalTracked)}
-          hint="Active inventory in watcher queue"
+          hint="Items in active watcher queue"
           icon={ScanSearch}
-          variant="mint"
+          variant="cyan"
         />
         <StatCard
           label="Active Watches"
           value={String(activeTracked)}
-          hint="Queued for next 00:00 UTC sweep"
+          hint="Continuous cloud sweeper"
           icon={Bell}
-          variant="cyan"
+          variant="blue"
         />
         <StatCard
           label="Net Value Saved"
           value={formatCurrency(totalSavings, featuredProduct?.currency ?? 'USD')}
-          hint="Peak price vs. current scraped rate"
+          hint="Calculated vs. peak MSRP"
           icon={DollarSign}
-          variant="amber"
+          variant="violet"
         />
         <StatCard
           label="Targets Hit"
           value={String(targetReady)}
-          hint="Items at or below target trigger"
+          hint="Items at or below target valuation"
           icon={ArrowDown}
-          variant="blue"
+          variant="emerald"
         />
       </div>
 
@@ -105,14 +106,14 @@ export default function Dashboard() {
         <Card hoverGlow isometric className="space-y-5 p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#00D4FF]">
                 Active Trajectory
               </span>
               <h2 className="mt-1 text-lg font-bold text-white truncate max-w-lg">
-                {featuredProduct?.title ?? 'Select a product to view pricing curve'}
+                {featuredProduct?.title ?? 'Select a product to view telemetry curve'}
               </h2>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-[#00f5a0] shadow-inner">
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-[#00D4FF] shadow-glow-cyan">
               <LineChart className="h-4 w-4" />
             </div>
           </div>
@@ -128,7 +129,7 @@ export default function Dashboard() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#00f5a0]">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#00D4FF]">
               Inventory Feed
             </span>
             <h2 className="mt-0.5 text-xl font-bold text-white">Monitored Watchlist</h2>
@@ -144,12 +145,12 @@ export default function Dashboard() {
         ) : filteredProducts.length === 0 ? (
           <div className="glass-card flex flex-col items-center justify-center gap-4 py-16 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-slate-400">
-              <PackageSearch className="h-7 w-7 text-[#00f5a0]" />
+              <PackageSearch className="h-7 w-7 text-[#00D4FF]" />
             </div>
             <p className="font-display text-base font-bold text-white">
               {products.length === 0 ? 'No products in tracker queue' : 'No items match your search'}
             </p>
-            <p className="max-w-xs text-xs text-slate-400">
+            <p className="max-w-xs text-xs text-[#94A3B8]">
               {products.length === 0
                 ? 'Click "Track Product" above to paste a URL from Amazon, Flipkart, BestBuy, or Zara.'
                 : 'Try adjusting your search keywords.'}

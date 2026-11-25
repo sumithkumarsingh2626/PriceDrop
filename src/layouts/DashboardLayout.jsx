@@ -10,10 +10,10 @@ export default function DashboardLayout() {
   const setAddProductOpen = useTrackingStore((s) => s.setAddProductOpen);
 
   return (
-    <div className="relative flex min-h-screen bg-[#06070a] text-slate-200 antialiased selection:bg-[#00f5a0] selection:text-[#06070a]">
-      {/* Background Precision Grid */}
-      <div className="pointer-events-none fixed inset-0 grid-premium opacity-50" />
-      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-transparent via-[#06070a]/40 to-[#06070a]" />
+    <div className="relative flex min-h-screen bg-[#050B18] text-[#F8FAFC] antialiased selection:bg-[#00D4FF] selection:text-[#050B18]">
+      {/* Background Precision Grid & Radial Cones */}
+      <div className="pointer-events-none fixed inset-0 grid-premium opacity-40" />
+      <div className="pointer-events-none fixed -top-40 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-b from-[#2563EB]/15 via-[#00D4FF]/8 to-transparent blur-[140px]" />
 
       <Sidebar />
       <div className="relative flex min-h-screen flex-1 flex-col overflow-hidden">
@@ -28,8 +28,8 @@ export default function DashboardLayout() {
       <Dialog
         isOpen={isAddProductOpen}
         onClose={() => setAddProductOpen(false)}
-        title="Deploy Product Watcher"
-        description="Paste an Amazon, Flipkart, BestBuy, or Zara link to initiate automated daily telemetry."
+        title="Deploy Cloud Watcher"
+        description="Input any Amazon, Flipkart, BestBuy, or Zara URL to initiate automated price monitoring."
       >
         <AddProductForm />
       </Dialog>

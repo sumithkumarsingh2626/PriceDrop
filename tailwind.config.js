@@ -5,21 +5,29 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          dark: '#06070A',
-          carbon: '#0B0D13',
-          slate: '#111520',
-          elevated: '#161B29',
-          mint: '#00F5A0',
-          emerald: '#10B981',
-          cobalt: '#38BDF8',
+        ai: {
+          bg: '#050B18',
+          card: '#0B1428',
+          elevated: '#111E38',
           blue: '#2563EB',
-          amber: '#F59E0B',
-          coral: '#F43F5E',
+          cyan: '#00D4FF',
           violet: '#8B5CF6',
-          purple: '#6366F1',
-          cyan: '#00D9F5',
-          ink: '#06070A',
+          text: '#F8FAFC',
+          muted: '#94A3B8',
+          border: 'rgba(255, 255, 255, 0.08)',
+        },
+        brand: {
+          dark: '#050B18',
+          carbon: '#0B1428',
+          slate: '#111E38',
+          blue: '#2563EB',
+          cyan: '#00D4FF',
+          violet: '#8B5CF6',
+          purple: '#8B5CF6',
+          mint: '#00D4FF',
+          emerald: '#10B981',
+          amber: '#F59E0B',
+          ink: '#050B18',
         },
       },
       fontFamily: {
@@ -28,39 +36,35 @@ export default {
         mono: ['"JetBrains Mono"', 'Menlo', 'Consolas', 'monospace'],
       },
       boxShadow: {
-        'specular': '0 1px 0 0 rgba(255, 255, 255, 0.15) inset, 0 0 0 1px rgba(255, 255, 255, 0.06) inset, 0 12px 30px -10px rgba(0, 0, 0, 0.8)',
-        'specular-hover': '0 1px 0 0 rgba(255, 255, 255, 0.3) inset, 0 0 0 1px rgba(0, 245, 160, 0.25) inset, 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px -5px rgba(0, 245, 160, 0.15)',
-        'specular-blue': '0 1px 0 0 rgba(255, 255, 255, 0.3) inset, 0 0 0 1px rgba(56, 189, 248, 0.25) inset, 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px -5px rgba(56, 189, 248, 0.15)',
-        'specular-amber': '0 1px 0 0 rgba(255, 255, 255, 0.3) inset, 0 0 0 1px rgba(245, 158, 11, 0.25) inset, 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px -5px rgba(245, 158, 11, 0.15)',
-        'specular-btn': '0 1px 0 0 rgba(255, 255, 255, 0.35) inset, 0 8px 20px -4px rgba(0, 245, 160, 0.4), 0 0 0 1px rgba(0, 245, 160, 0.5)',
-        'mint-glow': '0 0 30px rgba(0, 245, 160, 0.25)',
-        'glow': '0 0 30px rgba(0, 245, 160, 0.25)',
-        'glow-cyan': '0 0 30px rgba(56, 189, 248, 0.25)',
-        'glow-emerald': '0 0 30px rgba(16, 185, 129, 0.25)',
-        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)',
-        'glass-iso': '0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 1px 1px 0 rgba(255, 255, 255, 0.2) inset',
-        'glass-iso-hover': '0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0, 245, 160, 0.3) inset, 0 1px 2px 0 rgba(255, 255, 255, 0.3) inset',
+        'glow-cyan': '0 0 35px -5px rgba(0, 212, 255, 0.35)',
+        'glow-blue': '0 0 35px -5px rgba(37, 99, 235, 0.45)',
+        'glow-violet': '0 0 35px -5px rgba(139, 92, 246, 0.35)',
+        'glass-ai': '0 12px 40px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.06)',
+        'glass-ai-hover': '0 20px 50px -10px rgba(0, 212, 255, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(0, 212, 255, 0.3)',
+        'btn-ai': '0 1px 0 0 rgba(255, 255, 255, 0.4) inset, 0 10px 25px -5px rgba(37, 99, 235, 0.5), 0 0 20px rgba(0, 212, 255, 0.3)',
       },
       backgroundImage: {
-        'subtle-radial': 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0, 245, 160, 0.06), transparent 70%)',
-        'precision-grid': 'linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
-        'hero-mesh': 'radial-gradient(ellipse 60% 40% at 50% -10%, rgba(0, 245, 160, 0.08), transparent 60%), radial-gradient(ellipse 40% 30% at 80% 20%, rgba(56, 189, 248, 0.06), transparent 50%)',
+        'ai-mesh':
+          'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.25), transparent 70%), radial-gradient(ellipse 60% 40% at 85% 20%, rgba(0, 212, 255, 0.15), transparent 60%), radial-gradient(ellipse 50% 40% at 15% 60%, rgba(139, 92, 246, 0.15), transparent 60%)',
+        'cyber-grid':
+          'linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
+        'hero-mesh':
+          'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.25), transparent 70%), radial-gradient(ellipse 60% 40% at 85% 20%, rgba(0, 212, 255, 0.15), transparent 60%)',
       },
       animation: {
-        float: 'float 7s ease-in-out infinite',
-        'float-slow': 'float 10s ease-in-out infinite',
-        'float-fast': 'float 5s ease-in-out infinite',
-        'pulse-dot': 'pulseDot 2s ease-in-out infinite',
+        float: 'float 6s ease-in-out infinite',
+        'float-slow': 'float 9s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
         shimmer: 'shimmer 2.5s linear infinite',
       },
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(-12px)' },
         },
-        pulseDot: {
-          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-          '50%': { opacity: '0.4', transform: 'scale(0.85)' },
+        pulseGlow: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.85' },
         },
         shimmer: {
           '0%': { backgroundPosition: '200% 0' },

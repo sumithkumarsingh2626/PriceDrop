@@ -7,40 +7,35 @@ interface StatCardProps {
   value: string;
   hint: string;
   icon: LucideIcon;
-  variant?: 'mint' | 'cyan' | 'amber' | 'blue';
+  variant?: 'cyan' | 'blue' | 'violet' | 'emerald';
 }
 
-export default function StatCard({ label, value, hint, icon: Icon, variant = 'mint' }: StatCardProps) {
+export default function StatCard({ label, value, hint, icon: Icon, variant = 'cyan' }: StatCardProps) {
   const styles = {
-    mint: {
-      icon: 'text-[#00f5a0]',
-      iconBg: 'bg-[#00f5a0]/10 border-[#00f5a0]/20',
-      led: 'bg-[#00f5a0]',
-      highlight: 'group-hover:border-[#00f5a0]/30',
-    },
     cyan: {
-      icon: 'text-[#38bdf8]',
-      iconBg: 'bg-[#38bdf8]/10 border-[#38bdf8]/20',
-      led: 'bg-[#38bdf8]',
-      highlight: 'group-hover:border-[#38bdf8]/30',
-    },
-    amber: {
-      icon: 'text-[#f59e0b]',
-      iconBg: 'bg-[#f59e0b]/10 border-[#f59e0b]/20',
-      led: 'bg-[#f59e0b]',
-      highlight: 'group-hover:border-[#f59e0b]/30',
+      icon: 'text-[#00D4FF]',
+      iconBg: 'bg-[#00D4FF]/10 border-[#00D4FF]/25 shadow-glow-cyan',
+      highlight: 'group-hover:border-[#00D4FF]/40',
     },
     blue: {
-      icon: 'text-[#818cf8]',
-      iconBg: 'bg-[#818cf8]/10 border-[#818cf8]/20',
-      led: 'bg-[#818cf8]',
-      highlight: 'group-hover:border-[#818cf8]/30',
+      icon: 'text-[#2563EB]',
+      iconBg: 'bg-[#2563EB]/10 border-[#2563EB]/25 shadow-glow-blue',
+      highlight: 'group-hover:border-[#2563EB]/40',
+    },
+    violet: {
+      icon: 'text-[#8B5CF6]',
+      iconBg: 'bg-[#8B5CF6]/10 border-[#8B5CF6]/25 shadow-glow-violet',
+      highlight: 'group-hover:border-[#8B5CF6]/40',
+    },
+    emerald: {
+      icon: 'text-[#10B981]',
+      iconBg: 'bg-[#10B981]/10 border-[#10B981]/25',
+      highlight: 'group-hover:border-[#10B981]/40',
     },
   }[variant] || {
-    icon: 'text-[#00f5a0]',
-    iconBg: 'bg-[#00f5a0]/10 border-[#00f5a0]/20',
-    led: 'bg-[#00f5a0]',
-    highlight: 'group-hover:border-[#00f5a0]/30',
+    icon: 'text-[#00D4FF]',
+    iconBg: 'bg-[#00D4FF]/10 border-[#00D4FF]/25 shadow-glow-cyan',
+    highlight: 'group-hover:border-[#00D4FF]/40',
   };
 
   return (
@@ -48,8 +43,8 @@ export default function StatCard({ label, value, hint, icon: Icon, variant = 'mi
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full animate-pulse-dot shadow-[0_0_8px_currentColor]" style={{ backgroundColor: styles.icon.replace('text-[', '').replace(']', '') }} />
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#00D4FF] animate-pulse" />
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
               {label}
             </span>
           </div>
@@ -62,9 +57,9 @@ export default function StatCard({ label, value, hint, icon: Icon, variant = 'mi
         </div>
       </div>
 
-      <div className="mt-5 flex items-center justify-between border-t border-white/[0.05] pt-3 text-[11px] text-slate-400">
+      <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-3 text-[11px] text-[#94A3B8]">
         <span className="truncate">{hint}</span>
-        <span className="font-mono text-[9px] uppercase tracking-wider text-slate-500">Live</span>
+        <span className="font-mono text-[9px] uppercase tracking-wider text-[#00D4FF] font-semibold">Active</span>
       </div>
     </Card>
   );

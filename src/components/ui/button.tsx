@@ -4,20 +4,20 @@ import { cn } from '@/lib/utils';
 
 const variants = {
   primary:
-    'bg-gradient-to-b from-[#00f5a0] to-[#00d984] text-[#05140d] font-bold border border-[#00f5a0] shadow-[0_1px_0_0_rgba(255,255,255,0.4)_inset,0_6px_18px_-3px_rgba(0,245,160,0.45)] hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_1px_0_0_rgba(255,255,255,0.5)_inset,0_10px_25px_-4px_rgba(0,245,160,0.6)] active:translate-y-0',
+    'bg-gradient-to-r from-[#2563EB] via-[#1D4ED8] to-[#00D4FF] text-white font-bold border border-white/20 shadow-[0_1px_0_0_rgba(255,255,255,0.35)_inset,0_8px_24px_-4px_rgba(37,99,235,0.5),0_0_20px_-2px_rgba(0,212,255,0.3)] hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_1px_0_0_rgba(255,255,255,0.45)_inset,0_12px_30px_-4px_rgba(37,99,235,0.65),0_0_25px_0_rgba(0,212,255,0.45)] active:translate-y-0',
   secondary:
-    'bg-white/[0.05] text-slate-200 border border-white/[0.08] backdrop-blur-md hover:bg-white/[0.09] hover:border-white/[0.16] hover:text-white hover:-translate-y-0.5 active:translate-y-0',
+    'bg-[#0B1428]/80 text-[#F8FAFC] border border-white/[0.1] backdrop-blur-md hover:bg-[#111E38] hover:border-[#00D4FF]/30 hover:text-white hover:-translate-y-0.5 active:translate-y-0 shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset]',
   outline:
-    'bg-transparent border border-white/[0.12] text-slate-300 backdrop-blur-md hover:border-[#00f5a0]/40 hover:bg-[#00f5a0]/5 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
+    'bg-transparent border border-white/[0.14] text-slate-200 backdrop-blur-md hover:border-[#00D4FF]/50 hover:bg-[#00D4FF]/10 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
   danger:
-    'bg-rose-500/20 text-rose-300 border border-rose-500/30 backdrop-blur-md hover:bg-rose-500/30 hover:border-rose-500/50 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
+    'bg-rose-600/25 text-rose-300 border border-rose-500/40 backdrop-blur-md hover:bg-rose-600/40 hover:border-rose-500/60 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
   ghost:
-    'text-slate-400 hover:bg-white/[0.05] hover:text-slate-200 border border-transparent',
+    'text-slate-400 hover:bg-white/[0.06] hover:text-white border border-transparent',
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2.5 text-sm',
+  sm: 'px-3.5 py-1.5 text-xs',
+  md: 'px-4.5 py-2.5 text-sm',
   lg: 'px-6 py-3 text-base',
 };
 

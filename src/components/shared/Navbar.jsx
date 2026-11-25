@@ -36,14 +36,14 @@ export default function Navbar() {
           <Menu className="h-5 w-5" />
         </button>
 
-        {/* Global Search Bar */}
+        {/* Search Bar */}
         <div className="relative hidden flex-1 md:block">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search saved products by title or store…"
-            className="w-full max-w-md rounded-xl border border-white/[0.08] bg-white/[0.03] py-2 pl-9 pr-4 text-xs text-white placeholder:text-slate-500 outline-none transition-all focus:border-[#00f5a0]/40 focus:bg-white/[0.05] focus:ring-1 focus:ring-[#00f5a0]/30"
+            placeholder="Search tracked products by title or retail store…"
+            className="w-full max-w-md rounded-xl border border-white/[0.1] bg-[#0B1428]/80 py-2 pl-9 pr-4 text-xs text-white placeholder:text-slate-500 outline-none transition-all focus:border-[#00D4FF] focus:bg-[#111E38] focus:ring-1 focus:ring-[#00D4FF]/30"
           />
         </div>
 
@@ -56,32 +56,32 @@ export default function Navbar() {
           <div className="relative hidden sm:block" ref={dropdownRef}>
             <button
               onClick={() => setNotificationsOpen(!notificationsOpen)}
-              className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-300 hover:border-white/[0.18] hover:bg-white/[0.08] transition-colors"
+              className="flex items-center gap-2 rounded-xl border border-white/[0.1] bg-[#0B1428]/80 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:border-[#00D4FF]/40 hover:text-white transition-colors"
             >
-              <Bell className="h-3.5 w-3.5 text-[#00f5a0]" />
-              <span className="font-mono text-[11px]">{notifications.length}</span>
+              <Bell className="h-3.5 w-3.5 text-[#00D4FF]" />
+              <span className="font-mono text-[11px] font-bold">{notifications.length}</span>
             </button>
 
             {notificationsOpen && (
               <div className="glass-card-iso absolute right-0 top-full mt-2 w-80 md:w-96 p-0 z-50 overflow-hidden shadow-2xl">
-                <div className="p-3.5 border-b border-white/[0.08] flex justify-between items-center bg-white/[0.02]">
+                <div className="p-3.5 border-b border-white/[0.08] flex justify-between items-center bg-[#111E38]/50">
                   <h3 className="font-bold text-xs text-white uppercase tracking-wider font-mono">Dispatched Alerts</h3>
                   {notifications.length > 0 && (
-                    <span className="text-[10px] bg-[#00f5a0]/20 text-[#00f5a0] px-2 py-0.5 rounded font-mono font-bold">
+                    <span className="text-[10px] bg-[#00D4FF]/20 text-[#00D4FF] px-2 py-0.5 rounded font-mono font-bold">
                       {notifications.length} New
                     </span>
                   )}
                 </div>
                 <div className="max-h-80 overflow-y-auto p-2 space-y-1">
                   {notifications.length === 0 ? (
-                    <div className="p-4 text-center text-xs text-slate-500 font-mono">
+                    <div className="p-4 text-center text-xs text-slate-400 font-mono">
                       No notifications recorded yet.
                     </div>
                   ) : (
                     notifications.map((n) => (
                       <div key={n._id} className="p-3 rounded-lg hover:bg-white/[0.04] transition-colors border border-transparent hover:border-white/[0.05]">
                         <div className="flex items-center justify-between mb-1">
-                           <span className="text-[9px] uppercase tracking-wider text-[#00f5a0] bg-[#00f5a0]/10 border border-[#00f5a0]/20 px-1.5 py-0.5 rounded font-mono font-bold">
+                           <span className="text-[9px] uppercase tracking-wider text-[#00D4FF] bg-[#00D4FF]/10 border border-[#00D4FF]/30 px-1.5 py-0.5 rounded font-mono font-bold">
                              {n.channel}
                            </span>
                            <span className="text-[10px] text-slate-500 font-mono">

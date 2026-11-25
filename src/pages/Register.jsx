@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock, Mail, Phone, User } from 'lucide-react';
+import { Lock, Mail, Phone, User, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
@@ -55,12 +55,12 @@ export default function Register() {
 
   return (
     <PublicLayout
-      title="Create Tracker Account"
-      subtitle="Establish your telemetry profile to receive automated SMS and WhatsApp price drop triggers."
+      title="Deploy AI Tracker Account"
+      subtitle="Establish your autonomous price monitoring profile to receive real-time SMS & WhatsApp alerts."
     >
       <Card hoverGlow isometric className="w-full p-8 shadow-2xl">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
             <Input
               id="full-name"
               label="Full Name"
@@ -81,9 +81,11 @@ export default function Register() {
               autoComplete="email"
             />
           </div>
+
           <Input
             id="phone-number"
-            label="Phone Number (SMS & WhatsApp format)"
+            label="Phone Number"
+            hint="SMS & WhatsApp format"
             type="tel"
             value={phoneNumber}
             onChange={(event) => setPhoneNumber(event.target.value)}
@@ -91,14 +93,18 @@ export default function Register() {
             placeholder="+919876543210"
             autoComplete="tel"
           />
-          <div className="grid gap-4 md:grid-cols-2">
+
+          {/* Perfectly aligned Password & Confirm Password Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
             <Input
               id="register-password"
-              label="Password (min 8 chars)"
+              label="Password"
+              hint="Min. 8 chars"
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               leftIcon={<Lock className="h-4 w-4" />}
+              placeholder="••••••••"
               autoComplete="new-password"
             />
             <Input
@@ -108,24 +114,25 @@ export default function Register() {
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               leftIcon={<Lock className="h-4 w-4" />}
+              placeholder="••••••••"
               autoComplete="new-password"
             />
           </div>
 
           {error && (
-            <div className="rounded-lg border border-rose-500/30 bg-rose-950/40 px-3 py-2 text-xs text-rose-300">
+            <div className="rounded-xl border border-rose-500/30 bg-rose-950/40 px-3.5 py-2.5 font-mono text-xs text-rose-300">
               {error}
             </div>
           )}
 
-          <Button type="submit" className="w-full mt-2" isLoading={isRegistering}>
-            Deploy Account Profile
+          <Button type="submit" className="w-full mt-2 gap-2" isLoading={isRegistering}>
+            Deploy Account Profile <ArrowRight className="h-4 w-4" />
           </Button>
         </form>
 
         <div className="mt-6 flex items-center justify-between text-xs text-slate-400 border-t border-white/[0.06] pt-4">
           <span>Already registered?</span>
-          <Link to="/login" className="text-[#00f5a0] font-semibold hover:underline">
+          <Link to="/login" className="text-[#00D4FF] font-semibold hover:underline">
             Sign In Here
           </Link>
         </div>

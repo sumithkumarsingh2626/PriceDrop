@@ -1,15 +1,13 @@
 :root {
-  --brand-mint: #00f5a0;
-  --brand-emerald: #10b981;
-  --brand-cobalt: #38bdf8;
-  --brand-amber: #f59e0b;
-  --brand-dark: #06070a;
-  --brand-carbon: #0b0d13;
-  --brand-slate: #111520;
-  --glass-bg: rgba(11, 13, 19, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-specular: rgba(255, 255, 255, 0.22);
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --color-bg: #050b18;
+  --color-card: #0b1428;
+  --color-elevated: #111e38;
+  --color-blue: #2563eb;
+  --color-cyan: #00d4ff;
+  --color-violet: #8b5cf6;
+  --color-text: #f8fafc;
+  --color-muted: #94a3b8;
+  --glass-bg: rgba(11, 20, 40, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-border-specular: rgba(0, 212, 255, 0.3);
 }

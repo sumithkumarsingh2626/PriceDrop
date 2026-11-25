@@ -8,7 +8,7 @@
 
 @layer base {
   * {
-    @apply border-white/[0.07];
+    @apply border-white/[0.08];
   }
 
   html {
@@ -16,118 +16,118 @@
   }
 
   body {
-    @apply min-h-screen bg-[#06070a] font-sans text-slate-200 antialiased;
+    @apply min-h-screen bg-[#050B18] font-sans text-[#F8FAFC] antialiased selection:bg-[#00D4FF] selection:text-[#050B18];
     background-image: 
-      radial-gradient(circle 800px at 50% -100px, rgba(0, 245, 160, 0.05), transparent 80%),
-      radial-gradient(circle 600px at 100% 30%, rgba(56, 189, 248, 0.04), transparent 70%),
-      radial-gradient(circle 700px at 0% 70%, rgba(99, 102, 241, 0.03), transparent 70%);
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37, 99, 235, 0.22), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 90% 20%, rgba(0, 212, 255, 0.12), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 65%, rgba(139, 92, 246, 0.12), transparent 60%);
     background-attachment: fixed;
   }
 }
 
 @layer components {
-  /* Realistic Obsidian Frosted Glass Card */
+  /* Futuristic AI Glassmorphism Card */
   .glass-card {
-    @apply relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0c0e15]/75 backdrop-blur-xl transition-all duration-300;
+    @apply relative overflow-hidden rounded-2xl border border-white/[0.09] bg-[#0B1428]/80 backdrop-blur-xl transition-all duration-300;
     box-shadow: 
-      0 1px 0 0 rgba(255, 255, 255, 0.12) inset,
+      0 1px 0 0 rgba(255, 255, 255, 0.14) inset,
       0 0 0 1px rgba(255, 255, 255, 0.03) inset,
-      0 12px 30px -10px rgba(0, 0, 0, 0.7);
+      0 16px 40px -10px rgba(5, 11, 24, 0.85);
   }
 
-  /* Precision Isometric 3D Hardware Card */
+  /* 3D Isometric Holographic Card */
   .glass-card-iso {
-    @apply relative overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-b from-[#131722]/85 via-[#0e111a]/85 to-[#090b10]/95 backdrop-blur-2xl transition-all duration-300;
+    @apply relative overflow-hidden rounded-2xl border border-white/[0.1] bg-gradient-to-b from-[#111E38]/90 via-[#0B1428]/85 to-[#070D1E]/95 backdrop-blur-2xl transition-all duration-300;
     box-shadow: 
-      0 1px 0 0 rgba(255, 255, 255, 0.18) inset,
+      0 1px 0 0 rgba(255, 255, 255, 0.2) inset,
       0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-      0 20px 40px -15px rgba(0, 0, 0, 0.85);
+      0 20px 45px -10px rgba(2, 6, 15, 0.9);
   }
 
   .glass-card-iso:hover {
     transform: translateY(-5px);
-    border-color: rgba(0, 245, 160, 0.25);
+    border-color: rgba(0, 212, 255, 0.35);
     box-shadow: 
-      0 1px 0 0 rgba(255, 255, 255, 0.25) inset,
-      0 0 0 1px rgba(0, 245, 160, 0.2) inset,
-      0 25px 50px -15px rgba(0, 0, 0, 0.95),
-      0 0 30px -5px rgba(0, 245, 160, 0.12);
+      0 1px 0 0 rgba(255, 255, 255, 0.3) inset,
+      0 0 0 1px rgba(0, 212, 255, 0.25) inset,
+      0 25px 50px -10px rgba(5, 11, 24, 0.95),
+      0 0 30px -5px rgba(0, 212, 255, 0.25);
   }
 
-  /* Precision Frosted Navbar */
+  /* Sticky Navigation */
   .glass-nav {
-    @apply sticky top-0 z-50 border-b border-white/[0.08] bg-[#07090e]/80 backdrop-blur-xl;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+    @apply sticky top-0 z-50 border-b border-white/[0.08] bg-[#050B18]/75 backdrop-blur-2xl;
+    box-shadow: 0 4px 25px -2px rgba(5, 11, 24, 0.8);
   }
 
-  /* Precision Status Pill */
+  /* Futuristic Glass Pill */
   .glass-pill {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.04] px-3 py-1 text-xs font-semibold backdrop-blur-md;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-[#0B1428]/60 px-3 py-1 text-xs font-semibold backdrop-blur-md;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.18) inset;
   }
 
-  /* Tactile Mint Glow Button */
+  /* Primary Futuristic AI Button (Electric Blue -> Cyan) */
   .btn-gradient {
-    @apply relative inline-flex items-center justify-center rounded-xl bg-gradient-to-b from-[#00f5a0] to-[#00d984] px-5 py-2.5 text-sm font-bold text-[#05140d] transition-all duration-200 active:translate-y-0.5;
+    @apply relative inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#2563EB] via-[#1D4ED8] to-[#00D4FF] px-5 py-2.5 text-sm font-bold text-white transition-all duration-200 active:translate-y-0.5;
     box-shadow: 
-      0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
-      0 6px 18px -3px rgba(0, 245, 160, 0.45),
-      0 0 0 1px rgba(0, 245, 160, 0.6);
+      0 1px 0 0 rgba(255, 255, 255, 0.35) inset,
+      0 8px 24px -4px rgba(37, 99, 235, 0.5),
+      0 0 20px -2px rgba(0, 212, 255, 0.3);
   }
 
   .btn-gradient:hover {
-    @apply -translate-y-0.5 brightness-105;
+    @apply -translate-y-0.5 brightness-110;
     box-shadow: 
-      0 1px 0 0 rgba(255, 255, 255, 0.5) inset,
-      0 10px 25px -4px rgba(0, 245, 160, 0.6),
-      0 0 0 1px rgba(0, 245, 160, 0.8);
+      0 1px 0 0 rgba(255, 255, 255, 0.45) inset,
+      0 12px 30px -4px rgba(37, 99, 235, 0.65),
+      0 0 25px 0 rgba(0, 212, 255, 0.45);
   }
 
-  /* Titanium Frosted Secondary Button */
+  /* Secondary Glass Button */
   .btn-ghost-premium {
-    @apply inline-flex items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.05] px-5 py-2.5 text-sm font-semibold text-slate-200 backdrop-blur-md transition-all duration-200 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-white hover:-translate-y-0.5 active:translate-y-0;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.08) inset;
+    @apply inline-flex items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-[#F8FAFC] backdrop-blur-md transition-all duration-200 hover:border-[#00D4FF]/40 hover:bg-[#00D4FF]/10 hover:text-white hover:-translate-y-0.5 active:translate-y-0;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1) inset;
   }
 
-  /* Crisp Radiant Text Gradient */
+  /* Electric Gradient Text */
   .text-gradient {
-    @apply bg-gradient-to-r from-[#00f5a0] via-[#00d9f5] to-[#38bdf8] bg-clip-text text-transparent font-extrabold;
+    @apply bg-gradient-to-r from-[#00D4FF] via-[#60A5FA] to-[#8B5CF6] bg-clip-text text-transparent font-extrabold;
   }
 
-  .text-gradient-amber {
-    @apply bg-gradient-to-r from-[#f59e0b] via-[#fbbf24] to-[#fde68a] bg-clip-text text-transparent font-extrabold;
+  .text-gradient-cyan {
+    @apply bg-gradient-to-r from-[#00D4FF] to-[#3B82F6] bg-clip-text text-transparent font-extrabold;
   }
 
-  /* 3D Isometric Stage */
+  /* 3D Isometric Projection Stage */
   .iso-stage {
     perspective: 1400px;
     transform-style: preserve-3d;
   }
 
   .iso-layer-base {
-    transform: rotateX(20deg) rotateY(-14deg) rotateZ(4deg);
+    transform: rotateX(20deg) rotateY(-14deg) rotateZ(3deg);
     transform-style: preserve-3d;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .iso-layer-base:hover {
-    transform: rotateX(14deg) rotateY(-8deg) rotateZ(2deg) translateY(-8px);
+    transform: rotateX(14deg) rotateY(-8deg) rotateZ(1deg) translateY(-8px);
   }
 
-  /* Technical Grid Lines */
+  /* Background Grid */
   .grid-premium {
     background-size: 48px 48px;
     background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   }
 
-  /* Sidebar Active Link */
+  /* Active Sidebar Link */
   .sidebar-link-active {
-    @apply border border-[#00f5a0]/30 bg-[#00f5a0]/10 text-white font-bold backdrop-blur-md;
+    @apply border border-[#00D4FF]/30 bg-gradient-to-r from-[#2563EB]/25 to-[#00D4FF]/15 text-white font-bold backdrop-blur-md;
     box-shadow: 
-      0 0 15px 0 rgba(0, 245, 160, 0.15),
-      0 1px 0 0 rgba(255, 255, 255, 0.12) inset;
+      0 0 20px 0 rgba(0, 212, 255, 0.2),
+      0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
   }
 }
 
@@ -137,9 +137,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-slate-800;
+  @apply rounded-full bg-[#111E38];
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 245, 160, 0.4);
+  background: rgba(0, 212, 255, 0.5);
 }

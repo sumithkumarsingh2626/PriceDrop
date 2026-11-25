@@ -39,7 +39,7 @@ export default function TrackedProductCard({
     <Card hoverGlow isometric className="group relative flex h-full flex-col justify-between gap-5 p-6 transition-all duration-300">
       <div className="flex gap-4">
         {/* Product Image Frame */}
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#07090f] shadow-inner">
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#050B18] shadow-inner">
           {product.productImage ? (
             <img
               src={product.productImage}
@@ -57,7 +57,7 @@ export default function TrackedProductCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-white/[0.04] px-2 py-0.5 rounded border border-white/5">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#00D4FF] bg-[#00D4FF]/10 px-2 py-0.5 rounded border border-[#00D4FF]/20">
                 {product.storeName}
               </span>
               <h3 className="mt-1.5 line-clamp-2 text-sm font-bold text-white transition-colors group-hover:text-slate-100">
@@ -67,8 +67,8 @@ export default function TrackedProductCard({
             <span
               className={`shrink-0 rounded-md border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider ${
                 product.trackingStatus === 'active'
-                  ? 'border-[#00f5a0]/30 bg-[#00f5a0]/10 text-[#00f5a0]'
-                  : 'border-[#f59e0b]/30 bg-[#f59e0b]/10 text-[#f59e0b]'
+                  ? 'border-[#00D4FF]/30 bg-[#00D4FF]/10 text-[#00D4FF]'
+                  : 'border-[#F59E0B]/30 bg-[#F59E0B]/10 text-[#F59E0B]'
               }`}
             >
               {product.trackingStatus}
@@ -82,7 +82,7 @@ export default function TrackedProductCard({
             {product.lastPriceChange !== undefined && product.lastPriceChange !== 0 ? (
               <span
                 className={`font-mono text-xs font-bold ${
-                  product.lastPriceChange < 0 ? 'text-[#00f5a0]' : 'text-rose-400'
+                  product.lastPriceChange < 0 ? 'text-[#00D4FF]' : 'text-rose-400'
                 }`}
               >
                 {percentLabel(product.lastPriceChange)}
@@ -95,21 +95,21 @@ export default function TrackedProductCard({
       {/* Target & Lowest Price Tiles */}
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400">Target Valuation</p>
+          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#94A3B8]">Target Valuation</p>
           <p className="mt-1 font-mono text-sm font-bold text-white">
-            {product.targetPrice ? formatCurrency(product.targetPrice, product.currency) : 'Not configured'}
+            {product.targetPrice ? formatCurrency(product.targetPrice, product.currency) : 'Not set'}
           </p>
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-slate-400">Lowest Recorded</p>
-          <p className="mt-1 font-mono text-sm font-bold text-[#00f5a0]">
+          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#94A3B8]">Lowest Recorded</p>
+          <p className="mt-1 font-mono text-sm font-bold text-[#00D4FF]">
             {formatCurrency(product.lowestPrice, product.currency)}
           </p>
         </div>
       </div>
 
       {/* Telemetry Footer */}
-      <div className="rounded-lg border border-white/[0.04] bg-[#07090f]/80 px-3 py-2 text-[11px] font-mono text-slate-400 flex items-center justify-between">
+      <div className="rounded-lg border border-white/[0.04] bg-[#050B18]/70 px-3 py-2 text-[11px] font-mono text-slate-400 flex items-center justify-between">
         <span className="text-slate-500">Last Scraped:</span>
         <span className="text-slate-300">
           {product.lastScrapedAt ? formatRelativeDate(product.lastScrapedAt) : 'Pending first sweep'}
