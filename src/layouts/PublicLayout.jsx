@@ -1,45 +1,48 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@/components/ui/button';
+import { TrendingDown } from 'lucide-react';
 
-export default function PublicLayout({ children, title, subtitle }) {
+export default function PublicLayout({
+  children,
+  title,
+  subtitle,
+}) {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-brand-ink text-slate-100 antialiased selection:bg-brand-violet selection:text-white">
-      {/* Ambient background light orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-brand-violet/20 blur-[130px]" />
-        <div className="absolute -right-40 top-1/3 h-[500px] w-[500px] rounded-full bg-brand-cyan/15 blur-[130px]" />
-      </div>
+    <div className="relative min-h-screen overflow-x-hidden bg-[#06070a] text-slate-200 antialiased selection:bg-[#00f5a0] selection:text-[#06070a]">
+      {/* Background Precision Grid */}
+      <div className="pointer-events-none fixed inset-0 grid-premium opacity-50" />
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-transparent via-[#06070a]/40 to-[#06070a]" />
 
       <header className="glass-nav sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-violet via-purple-600 to-brand-cyan shadow-glow text-white">
-              <i className="bi bi-lightning-charge-fill text-xl" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-b from-[#161c28] to-[#0c0f17] border border-white/10 shadow-specular text-[#00f5a0]">
+              <TrendingDown className="h-5 w-5" />
             </div>
             <div>
-              <span className="font-display text-lg font-extrabold tracking-tight text-white">Price Drop</span>
-              <span className="ms-1.5 rounded-md border border-brand-cyan/30 bg-brand-cyan/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-cyan">PRO</span>
+              <span className="font-display text-base font-extrabold tracking-tight text-white">Price Drop</span>
+              <span className="ms-2 font-mono text-[10px] font-semibold text-[#00f5a0] border border-[#00f5a0]/30 bg-[#00f5a0]/10 px-1.5 py-0.5 rounded">
+                PRO
+              </span>
             </div>
           </Link>
           <div className="flex items-center gap-4">
-            <Link to="/login" className="text-sm font-medium text-slate-300 transition hover:text-white">
-              Sign in
+            <Link to="/login" className="text-xs font-semibold text-slate-300 transition hover:text-white">
+              Sign In
             </Link>
             <Link to="/register">
-              <Button size="sm">Get started</Button>
+              <Button size="sm">Get Started</Button>
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="relative mx-auto flex w-full max-w-xl flex-col px-4 pb-20 pt-12">
+      <main className="relative mx-auto flex w-full max-w-lg flex-col px-4 pb-20 pt-12">
         {(title || subtitle) && (
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/[0.05] p-3 text-white shadow-glow backdrop-blur-xl">
-              <i className="bi bi-stars text-xl text-gradient" />
-            </div>
-            {title ? <h1 className="font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">{title}</h1> : null}
-            {subtitle ? <p className="mt-3 text-sm leading-relaxed text-slate-400">{subtitle}</p> : null}
+            {title ? <h1 className="font-display text-3xl font-extrabold tracking-tight text-white">{title}</h1> : null}
+            {subtitle ? <p className="mt-2 text-xs leading-relaxed text-slate-400">{subtitle}</p> : null}
           </div>
         )}
         <div className="w-full">

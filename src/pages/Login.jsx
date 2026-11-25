@@ -30,11 +30,11 @@ export default function Login() {
 
   return (
     <PublicLayout
-      title="Welcome back"
-      subtitle="Sign in to continue monitoring your tracked products."
+      title="Access Telemetry Console"
+      subtitle="Authenticate with your registered account credentials to view monitored retail targets."
     >
       <Card hoverGlow isometric className="w-full p-8 shadow-2xl">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             id="email"
             label="Email address"
@@ -42,7 +42,7 @@ export default function Login() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             leftIcon={<Mail className="h-4 w-4" />}
-            placeholder="you@example.com"
+            placeholder="you@domain.com"
             autoComplete="email"
             error={errors.email}
           />
@@ -56,14 +56,15 @@ export default function Login() {
             autoComplete="current-password"
             error={errors.password}
           />
-          <Button type="submit" className="w-full" isLoading={isLoggingIn}>
-            Sign in
+          <Button type="submit" className="w-full mt-2" isLoading={isLoggingIn}>
+            Authenticate & Open Console
           </Button>
         </form>
 
-        <div className="mt-6 flex items-center justify-end text-sm text-slate-400">
-          <Link to="/register" className="hover:text-brand-purple">
-            Create account
+        <div className="mt-6 flex items-center justify-between text-xs text-slate-400 border-t border-white/[0.06] pt-4">
+          <span>Need an account?</span>
+          <Link to="/register" className="text-[#00f5a0] font-semibold hover:underline">
+            Create Free Account
           </Link>
         </div>
       </Card>

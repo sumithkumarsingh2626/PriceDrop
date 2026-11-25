@@ -1,15 +1,15 @@
 :root {
-  --brand-violet: #7c3aed;
-  --brand-purple: #8b5cf6;
-  --brand-cyan: #06b6d4;
+  --brand-mint: #00f5a0;
   --brand-emerald: #10b981;
+  --brand-cobalt: #38bdf8;
   --brand-amber: #f59e0b;
-  --brand-ink: #070a13;
-  --brand-slate: #0f172a;
-  --glass-bg: rgba(15, 23, 42, 0.65);
-  --glass-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-border-highlight: rgba(255, 255, 255, 0.25);
-  --text-primary: #f8fafc;
-  --text-muted: #94a3b8;
+  --brand-dark: #06070a;
+  --brand-carbon: #0b0d13;
+  --brand-slate: #111520;
+  --glass-bg: rgba(11, 13, 19, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-specular: rgba(255, 255, 255, 0.22);
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
 }

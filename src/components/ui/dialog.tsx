@@ -54,16 +54,16 @@ export default function Dialog({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15, transition: { duration: 0.15 } }}
             className={cn(
-              "relative z-10 w-full max-w-lg rounded-3xl border border-white/15 bg-slate-950/85 p-7 shadow-2xl backdrop-blur-2xl overflow-hidden",
+              "relative z-10 w-full max-w-lg rounded-2xl border border-white/[0.1] bg-[#0c0f17]/95 p-6 shadow-2xl backdrop-blur-2xl overflow-hidden",
               className
             )}
             style={{
-              boxShadow: '0 25px 60px -10px rgba(0,0,0,0.8), inset 0 1px 1px 0 rgba(255,255,255,0.25), 0 0 30px rgba(124,58,237,0.15)',
+              boxShadow: '0 25px 60px -10px rgba(0,0,0,0.9), inset 0 1px 0 0 rgba(255,255,255,0.2), 0 0 30px rgba(0,245,160,0.06)',
             }}
           >
             {/* Top specular reflection bar */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-            <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-cyan/10 blur-2xl" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+            <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-[#00f5a0]/5 blur-2xl" />
 
             {/* Close Button */}
             <button

@@ -36,56 +36,59 @@ export default function Navbar() {
           <Menu className="h-5 w-5" />
         </button>
 
+        {/* Global Search Bar */}
         <div className="relative hidden flex-1 md:block">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search tracked products by title…"
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.04] py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-slate-500 backdrop-blur-xl outline-none transition-all focus:border-brand-cyan/50 focus:bg-white/[0.07] focus:ring-2 focus:ring-brand-cyan/20"
+            placeholder="Search saved products by title or store…"
+            className="w-full max-w-md rounded-xl border border-white/[0.08] bg-white/[0.03] py-2 pl-9 pr-4 text-xs text-white placeholder:text-slate-500 outline-none transition-all focus:border-[#00f5a0]/40 focus:bg-white/[0.05] focus:ring-1 focus:ring-[#00f5a0]/30"
           />
         </div>
 
         <div className="ms-auto flex items-center gap-3">
-          <Button variant="primary" size="sm" leftIcon={<Plus className="h-4 w-4" />} onClick={() => setAddProductOpen(true)}>
-            Track
+          <Button variant="primary" size="sm" leftIcon={<Plus className="h-3.5 w-3.5" />} onClick={() => setAddProductOpen(true)}>
+            Track Product
           </Button>
+
+          {/* Notifications Dropdown */}
           <div className="relative hidden sm:block" ref={dropdownRef}>
             <button
               onClick={() => setNotificationsOpen(!notificationsOpen)}
-              className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.05] px-3.5 py-2 text-sm font-semibold text-slate-200 backdrop-blur-xl transition hover:border-brand-cyan/40 hover:bg-white/10"
+              className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-300 hover:border-white/[0.18] hover:bg-white/[0.08] transition-colors"
             >
-              <Bell className="h-4 w-4 text-brand-cyan" />
-              <span>{notifications.length}</span>
+              <Bell className="h-3.5 w-3.5 text-[#00f5a0]" />
+              <span className="font-mono text-[11px]">{notifications.length}</span>
             </button>
 
             {notificationsOpen && (
               <div className="glass-card-iso absolute right-0 top-full mt-2 w-80 md:w-96 p-0 z-50 overflow-hidden shadow-2xl">
-                <div className="p-4 border-b border-white/10 flex justify-between items-center bg-white/[0.02]">
-                  <h3 className="font-bold text-sm text-white">Notifications</h3>
+                <div className="p-3.5 border-b border-white/[0.08] flex justify-between items-center bg-white/[0.02]">
+                  <h3 className="font-bold text-xs text-white uppercase tracking-wider font-mono">Dispatched Alerts</h3>
                   {notifications.length > 0 && (
-                    <span className="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-[10px] bg-[#00f5a0]/20 text-[#00f5a0] px-2 py-0.5 rounded font-mono font-bold">
                       {notifications.length} New
                     </span>
                   )}
                 </div>
                 <div className="max-h-80 overflow-y-auto p-2 space-y-1">
                   {notifications.length === 0 ? (
-                    <div className="p-4 text-center text-sm text-slate-400">
-                      No notifications yet.
+                    <div className="p-4 text-center text-xs text-slate-500 font-mono">
+                      No notifications recorded yet.
                     </div>
                   ) : (
                     notifications.map((n) => (
-                      <div key={n._id} className="p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                      <div key={n._id} className="p-3 rounded-lg hover:bg-white/[0.04] transition-colors border border-transparent hover:border-white/[0.05]">
                         <div className="flex items-center justify-between mb-1">
-                           <span className="text-[10px] uppercase tracking-[0.2em] text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/20 px-2 py-0.5 rounded-full font-bold">
+                           <span className="text-[9px] uppercase tracking-wider text-[#00f5a0] bg-[#00f5a0]/10 border border-[#00f5a0]/20 px-1.5 py-0.5 rounded font-mono font-bold">
                              {n.channel}
                            </span>
-                           <span className="text-xs text-slate-500">
+                           <span className="text-[10px] text-slate-500 font-mono">
                              {new Date(n.createdAt).toLocaleDateString()}
                            </span>
                         </div>
-                        <p className="text-sm text-slate-200 mt-2">{n.messageBody}</p>
+                        <p className="text-xs text-slate-300 mt-1 leading-relaxed">{n.messageBody}</p>
                       </div>
                     ))
                   )}
@@ -93,10 +96,12 @@ export default function Navbar() {
               </div>
             )}
           </div>
-          <div className="hidden text-end md:block">
-            <p className="text-[10px] uppercase tracking-wider text-slate-400">Signed in</p>
-            <p className="mt-0.5 text-sm font-bold text-white">{user?.fullName || user?.email || user?.phoneNumber}</p>
+
+          <div className="hidden text-end md:block pl-2 border-l border-white/[0.08]">
+            <p className="font-mono text-[9px] uppercase tracking-wider text-slate-500">Authenticated</p>
+            <p className="text-xs font-bold text-white truncate max-w-[130px]">{user?.fullName || user?.email || user?.phoneNumber}</p>
           </div>
+
           <Button variant="ghost" size="sm" onClick={() => logout()}>
             Logout
           </Button>
@@ -104,43 +109,19 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <nav className="mt-3 flex flex-col gap-2 border-t border-white/5 pt-3 lg:hidden">
-          <Link to="/dashboard" className="rounded-lg px-3 py-2 text-sm hover:bg-white/5" onClick={() => setMobileOpen(false)}>
+        <nav className="mt-3 flex flex-col gap-1 border-t border-white/[0.08] pt-3 lg:hidden text-xs">
+          <Link to="/dashboard" className="rounded-lg px-3 py-2 hover:bg-white/5" onClick={() => setMobileOpen(false)}>
             Dashboard
           </Link>
-          <Link to="/products" className="rounded-lg px-3 py-2 text-sm hover:bg-white/5" onClick={() => setMobileOpen(false)}>
+          <Link to="/products" className="rounded-lg px-3 py-2 hover:bg-white/5" onClick={() => setMobileOpen(false)}>
             Products
           </Link>
-          <Link to="/analytics" className="rounded-lg px-3 py-2 text-sm hover:bg-white/5" onClick={() => setMobileOpen(false)}>
+          <Link to="/analytics" className="rounded-lg px-3 py-2 hover:bg-white/5" onClick={() => setMobileOpen(false)}>
             Analytics
           </Link>
-          <button 
-            className="flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-white/5 w-full text-left" 
-            onClick={() => setNotificationsOpen(!notificationsOpen)}
-          >
-            <span>Notifications</span>
-            {notifications.length > 0 && (
-              <span className="bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full text-xs">{notifications.length}</span>
-            )}
-          </button>
-          
-          {notificationsOpen && (
-             <div className="px-3 py-2 space-y-2 max-h-60 overflow-y-auto">
-                {notifications.length === 0 ? (
-                  <p className="text-xs text-slate-500">No notifications</p>
-                ) : (
-                  notifications.map(n => (
-                    <div key={n._id} className="text-xs bg-white/5 border border-white/5 p-3 rounded-xl">
-                       <div className="flex justify-between items-center mb-2">
-                         <span className="text-[10px] text-brand-cyan uppercase tracking-[0.2em]">{n.channel}</span>
-                         <span className="text-slate-500">{new Date(n.createdAt).toLocaleDateString()}</span>
-                       </div>
-                       <p className="text-slate-300">{n.messageBody}</p>
-                    </div>
-                  ))
-                )}
-             </div>
-          )}
+          <Link to="/settings" className="rounded-lg px-3 py-2 hover:bg-white/5" onClick={() => setMobileOpen(false)}>
+            Settings
+          </Link>
         </nav>
       )}
     </header>

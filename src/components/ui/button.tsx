@@ -1,17 +1,18 @@
+import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const variants = {
   primary:
-    'bg-gradient-to-r from-brand-violet to-brand-purple text-white shadow-glow border border-white/20 hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-5px_rgba(124,58,237,0.6)] active:translate-y-0',
+    'bg-gradient-to-b from-[#00f5a0] to-[#00d984] text-[#05140d] font-bold border border-[#00f5a0] shadow-[0_1px_0_0_rgba(255,255,255,0.4)_inset,0_6px_18px_-3px_rgba(0,245,160,0.45)] hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_1px_0_0_rgba(255,255,255,0.5)_inset,0_10px_25px_-4px_rgba(0,245,160,0.6)] active:translate-y-0',
   secondary:
-    'bg-white/[0.07] text-slate-100 border border-white/12 backdrop-blur-xl hover:bg-white/[0.12] hover:border-white/25 hover:-translate-y-0.5 active:translate-y-0',
+    'bg-white/[0.05] text-slate-200 border border-white/[0.08] backdrop-blur-md hover:bg-white/[0.09] hover:border-white/[0.16] hover:text-white hover:-translate-y-0.5 active:translate-y-0',
   outline:
-    'bg-white/[0.03] border border-white/15 text-slate-200 backdrop-blur-xl hover:border-brand-cyan/50 hover:bg-brand-cyan/10 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
+    'bg-transparent border border-white/[0.12] text-slate-300 backdrop-blur-md hover:border-[#00f5a0]/40 hover:bg-[#00f5a0]/5 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
   danger:
-    'bg-rose-600/80 text-white border border-rose-400/30 backdrop-blur-xl hover:bg-rose-600 hover:-translate-y-0.5',
+    'bg-rose-500/20 text-rose-300 border border-rose-500/30 backdrop-blur-md hover:bg-rose-500/30 hover:border-rose-500/50 hover:text-white hover:-translate-y-0.5 active:translate-y-0',
   ghost:
-    'text-slate-400 hover:bg-white/5 hover:text-white border border-transparent',
+    'text-slate-400 hover:bg-white/[0.05] hover:text-slate-200 border border-transparent',
 };
 
 const sizes = {
@@ -31,13 +32,24 @@ export default function Button({
   disabled,
   type = 'button',
   ...rest
+}: {
+  className?: string;
+  variant?: keyof typeof variants;
+  size?: keyof typeof sizes;
+  isLoading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  children: React.ReactNode;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  [key: string]: any;
 }) {
   return (
     <button
       type={type}
       disabled={disabled || isLoading}
       className={cn(
-        'inline-flex items-center justify-center rounded-xl font-semibold transition active:scale-[0.98] disabled:opacity-50',
+        'inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed',
         variants[variant],
         sizes[size],
         className,
